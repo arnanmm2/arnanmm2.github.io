@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seeing Rice Landscapes at 10 Metres · Arnan Muflihadi</title>
+<meta name="description" content="A West Java case study in historical paddy-probability screening, evidence integration, and the decision to withhold an unvalidated 2034 pixel forecast.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,300..800&family=Roboto+Mono:wght@400;500&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0,0&display=swap" rel="stylesheet">
+<script src="assets/js/theme-init.js?v=1"></script>
+<link rel="stylesheet" href="assets/css/style.css?v=56">
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;rect width='100' height='100' rx='20' fill='%230c0c0d'/&gt;&lt;circle cx='50' cy='50' r='16' fill='%23f4f4f3'/&gt;&lt;/svg&gt;">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Seeing Rice Landscapes at 10 Metres · Arnan Muflihadi">
+<meta property="og:description" content="Historical remote-sensing evidence for West Java, with a visible boundary between observation, scenario, and speculation.">
+<meta property="og:url" content="https://arnanmuflihadi.github.io/project-alphaearth-food.html">
+<meta property="og:image" content="https://arnanmuflihadi.github.io/assets/img/alphaearth/paddy-screen-2024-jawa-barat.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Seeing Rice Landscapes at 10 Metres · Arnan Muflihadi">
+<meta name="twitter:description" content="Historical remote-sensing evidence for West Java, with a visible boundary between observation, scenario, and speculation.">
+<meta name="twitter:image" content="https://arnanmuflihadi.github.io/assets/img/alphaearth/paddy-screen-2024-jawa-barat.png">
+</head>
+<body data-project="alphaearth">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="nav">
+  <div class="nav__links">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="portfolio.html">Portfolio</a>
+    <a href="contact.html">Contact</a>
+    <button class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l1.4 1.4" stroke-linecap="round"/></svg>
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8z" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+  <button class="nav__burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</nav>
+
+<header class="cs-hero wrap" id="main" tabindex="-1">
+  <a href="portfolio.html" class="back">← Back to projects</a>
+  <h1 class="reveal">Seeing rice landscapes at 10 metres—without pretending to see 2034.</h1>
+  <p class="lede reveal">A West Java case study in using historical remote-sensing evidence while making the boundary between observation, scenario, and speculation visible.</p>
+  <dl class="cs-meta reveal">
+    <div><dt class="sr-only">Study area</dt><dd>West Java · 27 source raster tiles · 2017–2024</dd></div>
+    <div><dt class="sr-only">Method</dt><dd>AlphaEarth · Sentinel-1 pilot · provenance-first QA</dd></div>
+    <div><dt class="sr-only">Output</dt><dd>Historical screening · contextual evidence · validation gate</dd></div>
+  </dl>
+</header>
+
+<main class="wrap">
+
+  <section class="cs-section" id="problem-statement">
+    <div class="cs-section__head reveal">
+      <span class="idx">01</span>
+      <h2>Problem statement</h2>
+    </div>
+    <div class="cs-prose reveal">
+      <p>Planning for food security in West Java is an evidence-integration problem before it is a mapping problem. Land, crop, irrigation, policy, and local administrative data sit in different systems, use different dates, and answer different questions. A detailed map can make those mismatches disappear from view—and create more certainty than the data deserves.</p>
+      <p>This study asked a narrower question: <strong>what can a 10 m historical paddy-probability screen legitimately tell a planning team?</strong> The answer had to be useful for investigation while staying honest about what was not measured.</p>
+    </div>
+    <aside class="method-callout reveal">
+      <p><b>The central design choice</b> was to treat each source as evidence with a role, not as interchangeable truth. The project separates observed historical patterns, conditional scenario context, and future spatial outputs that did not pass validation.</p>
+    </aside>
+  </section>
+
+  <section class="cs-section" id="data-analysis">
+    <div class="cs-section__head reveal">
+      <span class="idx">02</span>
+      <h2>Data &amp; analysis</h2>
+    </div>
+
+    <div class="dflow reveal" aria-label="Four-part evidence workflow">
+      <div class="dflow__phase">
+        <div class="dflow__head"><span class="dflow__num">01</span><span class="dflow__title">Historical signal</span></div>
+        <div class="dflow__nodes"><div class="dflow__node dflow__node--data"><span class="st">2017–2024</span><span class="tx">Twenty-seven annual-source raster tiles were assembled as a time series of model-derived physical-paddy probability screens.</span></div></div>
+      </div>
+      <div class="dflow__link" aria-hidden="true"><span class="ms">arrow_forward</span></div>
+      <div class="dflow__phase">
+        <div class="dflow__head"><span class="dflow__num">02</span><span class="dflow__title">Pilot test</span></div>
+        <div class="dflow__nodes"><div class="dflow__node"><span class="st">Indramayu, 2024</span><span class="tx">AlphaEarth and Sentinel-1 were compared on 600 candidate labels using 104 spatial blocks and five spatial folds.</span></div></div>
+      </div>
+      <div class="dflow__link" aria-hidden="true"><span class="ms">arrow_forward</span></div>
+      <div class="dflow__phase">
+        <div class="dflow__head"><span class="dflow__num">03</span><span class="dflow__title">Context</span></div>
+        <div class="dflow__nodes"><div class="dflow__node"><span class="st">Planning layers</span><span class="tx">Irrigation and policy context were audited separately, so their coverage is not mistaken for water service or land-use truth.</span></div></div>
+      </div>
+      <div class="dflow__link" aria-hidden="true"><span class="ms">arrow_forward</span></div>
+      <div class="dflow__phase">
+        <div class="dflow__head"><span class="dflow__num">04</span><span class="dflow__title">Validation gate</span></div>
+        <div class="dflow__nodes"><div class="dflow__node"><span class="st">Projection check</span><span class="tx">A future pixel map was withheld when spatial hindcasting did not outperform a persistence baseline.</span></div></div>
+      </div>
+    </div>
+
+    <div class="cs-prose reveal">
+      <p>The map below is intentionally shown before any administrative aggregation. It is a <strong>model-derived physical-paddy probability screening surface</strong>, not raw satellite imagery, a parcel boundary, an LP2B/KP2B designation, planted area, harvested area, production, or a legal map.</p>
+    </div>
+
+    <section class="project-story reveal" data-image-scrolly aria-label="Historical paddy-screening evidence story">
+      <div class="project-story__head">
+        <div>
+          <span class="project-story__eyebrow">Scroll the evidence</span>
+          <h3>From historical screen to an explicit stopping point.</h3>
+        </div>
+        <p>Each frame is a different claim. The visual, source note, and caveat move together so that a high-resolution image is never mistaken for a high-confidence forecast.</p>
+      </div>
+      <div class="story-scrolly">
+        <div class="story-visual">
+          <div class="story-stage story-stage--media">
+            <img class="story-image" data-story-image src="assets/img/alphaearth/paddy-screen-2017-jawa-barat.png" width="2048" height="1667" alt="West Java 2017 model-derived physical-paddy probability screening surface; it is not a legal land map or field-verified paddy extent.">
+            <div class="story-caption" data-story-caption>West Java, 2017. Historical screening surface shown without district or village aggregation.</div>
+            <div class="story-map-card">
+              <div>
+                <div class="story-map-card__kpi" data-story-kpi>2017</div>
+                <span class="story-map-card__label" data-story-label>historical screen</span>
+              </div>
+              <p class="story-map-card__note" data-story-note>This is the baseline: a model-derived physical-paddy probability screen, not a parcel map.</p>
+            </div>
+          </div>
+          <div class="story-progress" data-story-progress aria-label="Historical screening story chapters"></div>
+          <p class="story-source-note">Source &amp; scope: published here as a selected, screen-ready derivative from the project workflow. The source grid is 10 m; display images are resampled only for viewing. No government source bundles, tokens, or raw atlas package are redistributed.</p>
+        </div>
+        <div class="story-steps">
+          <article class="story-step" data-image="assets/img/alphaearth/paddy-screen-2017-jawa-barat.png" data-alt="West Java 2017 model-derived physical-paddy probability screening surface; it is not a legal land map or field-verified paddy extent." data-caption="West Java, 2017. Historical screening surface shown without district or village aggregation." data-kpi="2017" data-label="historical screen" data-note="This is the baseline: a model-derived physical-paddy probability screen, not a parcel map.">
+            <span class="story-step__num">01 / 04</span>
+            <h4>Start with a historical screen, not a claim about ownership or zoning.</h4>
+            <p>The 2017 view shows the analytical object at its native geographic logic: a continuous probability surface. It is a starting point for inspection, not a verdict on a field.</p>
+            <div class="story-step__meta"><span>West Java</span><span>2017</span><span>screening only</span></div>
+          </article>
+          <article class="story-step" data-image="assets/img/alphaearth/paddy-screen-2024-jawa-barat.png" data-alt="West Java 2024 model-derived physical-paddy probability screening surface; it is not a legal land map or a measured conversion map." data-caption="West Java, 2024. Same statewide frame; visual differences are not automatically recorded land conversion." data-kpi="2024" data-label="same historical frame" data-note="A second historical screen invites comparison, but it does not by itself measure conversion or production.">
+            <span class="story-step__num">02 / 04</span>
+            <h4>Use the same frame later—without turning visual difference into measured conversion.</h4>
+            <p>The 2024 screen can direct attention to places that deserve a closer look. It cannot distinguish every change in crop cycle, cloud-free observation, model response, or land use without independent reference data.</p>
+            <div class="story-step__meta"><span>West Java</span><span>2024</span><span>no conversion claim</span></div>
+          </article>
+          <article class="story-step" data-image="assets/img/alphaearth/paddy-screen-2024-indramayu.png" data-alt="Indramayu 2024 model-derived physical-paddy probability screening surface, shown as a detailed inspection frame; 10 metre input grid does not create parcel-level certainty." data-caption="Indramayu, 2024. The 10 m input grid supports closer inspection, not parcel-level certainty." data-kpi="10 m" data-label="native input grid" data-note="More spatial detail makes local inspection easier. It does not substitute for independent validation or field checks.">
+            <span class="story-step__num">03 / 04</span>
+            <h4>Ten metres changes the scale of inspection, not the burden of proof.</h4>
+            <p>This district frame makes patterns easier to inspect. It still does not identify a farm boundary, prove active planting, or translate directly into harvest or rice tonnage.</p>
+            <div class="story-step__meta"><span>Indramayu</span><span>2024</span><span>inspection scale</span></div>
+          </article>
+          <article class="story-step" data-image="assets/img/alphaearth/evidence-boundary.svg" data-alt="Evidence boundary diagram: historical screening is available, three-district aggregate scenario context is conditional, and raw 2034 pixel maps are withheld." data-caption="The evidence boundary. A raw 2034 spatial projection was not published because the validation gate did not clear." data-kpi="withheld" data-label="raw 2034 raster" data-note="The project reports a no-go for pixel-level forecasting rather than converting an unvalidated spatial allocation into a planning map.">
+            <span class="story-step__num">04 / 04</span>
+            <h4>Where the map stops is part of the result.</h4>
+            <p>Spatial hindcasting did not beat persistence, and there is no independent multi-year change reference. The responsible output is an explicit boundary: historical screening is available; raw 2034 pixels are not.</p>
+            <div class="story-step__meta"><span>validation gate</span><span>no raw 2034 map</span></div>
+          </article>
+        </div>
+      </div>
+      <noscript>
+        <div class="alphaearth-noscript">
+          <img src="assets/img/alphaearth/paddy-screen-2024-jawa-barat.png" alt="West Java 2024 historical paddy probability screening surface.">
+          <img src="assets/img/alphaearth/paddy-screen-2024-indramayu.png" alt="Indramayu 2024 detailed historical paddy probability screening surface.">
+          <img src="assets/img/alphaearth/evidence-boundary.svg" alt="Diagram explaining the boundary between historical screening, aggregate scenarios, and withheld raw 2034 pixels.">
+        </div>
+      </noscript>
+    </section>
+
+    <figure class="figure reveal">
+      <div class="figure__frame" data-cap="West Java irrigation and planning-context coverage from a registered SIGI/PUPR extract.">
+        <img src="assets/img/alphaearth/sigi-jabar-context.png" width="2862" height="1263" alt="West Java irrigation and planning-context coverage map from a registered SIGI PUPR extract.">
+      </div>
+      <figcaption>Context is kept separate from the paddy screen. The registered SIGI/PUPR extract passed technical QA for 14 of 14 layers and contains 1,356 features after an exact West Java clip. It represents documented layer coverage—not irrigation service, performance, or causal effect.</figcaption>
+    </figure>
+  </section>
+
+  <section class="cs-section" id="results">
+    <div class="cs-section__head reveal">
+      <span class="idx">03</span>
+      <h2>Results</h2>
+    </div>
+    <div class="stats reveal">
+      <div class="stat"><div class="v">27</div><div class="k">source raster tiles in the historical set</div></div>
+      <div class="stat"><div class="v">8</div><div class="k">annual historical screens, 2017–2024</div></div>
+      <div class="stat"><div class="v">10 m</div><div class="k">native input grid for the screen</div></div>
+      <div class="stat"><div class="v">0</div><div class="k">published raw 2034 pixel maps</div></div>
+    </div>
+    <div class="cs-prose reveal" style="margin-top:36px">
+      <p>The historical deliverable is useful because it is legible at two scales: a full West Java frame for regional patterns, and detailed local frames for follow-up. It is deliberately not presented as a count of fields, a production estimate, or a final inventory of protected agricultural land.</p>
+      <p>The Indramayu methodological pilot also showed that AlphaEarth features can distinguish the project&rsquo;s user-processed candidate frame better than Sentinel-1 alone. That is a <strong>pilot discrimination result</strong>, not a statewide accuracy claim.</p>
+    </div>
+    <figure class="figure reveal">
+      <div class="figure__frame" data-cap="Indramayu 2024 pilot comparison of Sentinel-1, AlphaEarth, and combined candidate-screening models.">
+        <img src="assets/img/alphaearth/alphaearth-sentinel-pilot-benchmark.png" width="1960" height="1026" alt="Indramayu 2024 pilot comparison chart for Sentinel-1, AlphaEarth, combined, and KP2B-soft-feature models.">
+      </div>
+      <figcaption>Indramayu pilot, 2024: 600 candidate labels, 104 spatial blocks, and five spatial folds. Mean ROC-AUC was 0.761 for Sentinel-1, 0.966 for AlphaEarth, 0.970 for the combined model, and 0.973 after adding KP2B as a soft feature. These figures test cross-sectional separability of the candidate frame, not statewide paddy-map accuracy.</figcaption>
+    </figure>
+  </section>
+
+  <section class="cs-section" id="limitations">
+    <div class="cs-section__head reveal">
+      <span class="idx">04</span>
+      <h2>Limitations</h2>
+    </div>
+    <div class="cs-prose full reveal">
+      <table class="dtable alphaearth-limitations-table">
+        <thead><tr><th>Boundary</th><th>What it means in practice</th></tr></thead>
+        <tbody>
+          <tr><td>Screening is not ground truth</td><td>The historical image is provisional scientific screening. It is not an official or legal map, and it does not replace field checking or an authorised LP2B/KP2B inventory.</td></tr>
+          <tr><td>Historical difference is not conversion</td><td>A change between annual probability screens can reflect land dynamics, crop cycles, observation conditions, or model response. Independent multitemporal reference data are needed to make a conversion claim.</td></tr>
+          <tr><td>Pilot performance has a narrow scope</td><td>The benchmark measures discrimination of a user-processed candidate frame in Indramayu. It should not be recast as province-wide classification accuracy.</td></tr>
+          <tr><td>Raw 2034 pixels are withheld</td><td>The best aggregate trend hindcast had a 12,967 ha MAE, worse than a 9,259 ha persistence baseline. With no independent change reference, publishing a spatial allocation would overstate what the study knows.</td></tr>
+          <tr><td>Food availability is broader than paddy area</td><td>Any three-district aggregate sensitivity work excludes trade, stocks, prices, access, diet, and household distribution. It is not a complete food-security forecast.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <aside class="method-callout reveal">
+      <p><b>A visible no-go is more useful than a confident-looking error.</b> The absence of a raw 2034 map is a quality-control decision, not a missing graphic.</p>
+    </aside>
+  </section>
+
+  <section class="cs-section" id="what-this-tells-us">
+    <div class="cs-section__head reveal">
+      <span class="idx">05</span>
+      <h2>What this tells us</h2>
+    </div>
+    <div class="alphaearth-evidence-states reveal" aria-label="Three evidence states used in the case study">
+      <article>
+        <span class="alphaearth-state-label alphaearth-state-label--available">Observed</span>
+        <h3>Historical screening</h3>
+        <p>Useful for finding places to inspect across West Java, provided it stays labelled as a model-derived paddy-probability surface.</p>
+      </article>
+      <article>
+        <span class="alphaearth-state-label alphaearth-state-label--context">Conditional</span>
+        <h3>Aggregate scenario context</h3>
+        <p>Useful for sensitivity discussion in Indramayu, Karawang, and Subang, but not for locating future change on a map.</p>
+      </article>
+      <article>
+        <span class="alphaearth-state-label alphaearth-state-label--withheld">Withheld</span>
+        <h3>Future pixel allocation</h3>
+        <p>Not published until independent validation can show that the spatial model adds value beyond persistence.</p>
+      </article>
+    </div>
+    <div class="cs-prose reveal" style="margin-top:42px">
+      <p>The study does not end with a single, sweeping answer about West Java&rsquo;s future. It gives planners a more disciplined starting point: an auditable historical signal, a clear request for validation data, and a shared language for distinguishing evidence from plausible narrative.</p>
+      <p><strong>The point was not to make a sharper forecast. It was to make the boundary between evidence and speculation visible.</strong></p>
+    </div>
+    <div class="cs-refs full reveal alphaearth-sources">
+      <div class="cs-refs__sub">Source &amp; scope</div>
+      <p>Project evidence draws on AlphaEarth Foundations and Sentinel-1 for the methodological pilot; SIGI/PUPR, GISTARU, BIG, BPS, and Kementan/SISCROP as contextual government sources where applicable. Portal availability is not treated as a blanket reuse licence; only selected derivative figures and explanatory assets are published here.</p>
+      <p>Portfolio version: August 2026. This page is a methodological case study, not an official agricultural inventory, land-rights record, or operational forecast.</p>
+    </div>
+  </section>
+
+</main>
+
+<nav class="cs-pager">
+  <a href="project-pangan.html"><span class="label">Related project</span><span class="t">← Rice Supply Chain in West Java</span></a>
+  <a href="portfolio.html"><span class="label">Index</span><span class="t">All projects →</span></a>
+</nav>
+
+<footer class="foot">
+  <span>© <span data-year>2026</span> Arnan Muflihadi</span>
+  <span>Urban Planner &amp; GIS Analyst</span>
+</footer>
+
+<script src="assets/js/main.js?v=17"></script>
+<script src="assets/js/collapsible.js?v=1"></script>
+<script src="assets/js/microinteraction.js?v=1"></script>
+<script src="assets/js/scrolly-stories.js?v=8"></script>
+</body>
+</html>

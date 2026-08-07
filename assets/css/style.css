@@ -1,4 +1,4 @@
-@import url("./variables.css?v=2");
+@import url("./variables.css?v=3");
 
 /* ============================================================
    ARNAN MUFLIHADI — GEOSPATIAL PORTFOLIO
@@ -2418,7 +2418,7 @@ body::before { display: none; }
     will-change: transform;
   }
 
-  .editorial-portfolio .work__list .card:not([data-stack-order="6"]) {
+  .editorial-portfolio .work__list .card:not([data-stack-order="7"]) {
     margin-bottom: clamp(84px, 18svh, 164px);
   }
 
@@ -2460,6 +2460,7 @@ body::before { display: none; }
   .editorial-portfolio .card[data-stack-order="4"] { --stack-z: 4; }
   .editorial-portfolio .card[data-stack-order="5"] { --stack-z: 5; }
   .editorial-portfolio .card[data-stack-order="6"] { --stack-z: 6; }
+  .editorial-portfolio .card[data-stack-order="7"] { --stack-z: 7; }
 
   .editorial-portfolio .work__list .card:last-child { margin-bottom: 0; }
 }
@@ -3385,6 +3386,7 @@ body[data-project="transit"] .cs-hero { --project-hero-map: url("../img/maps/her
 body[data-project="pangan"] .cs-hero { --project-hero-map: url("../img/maps/hero-pangan.svg"); }
 body[data-project="mbr"] .cs-hero { --project-hero-map: url("../img/maps/hero-mbr.svg"); }
 body[data-project="cbd"] .cs-hero { --project-hero-map: url("../img/maps/hero-cbd.svg"); }
+body[data-project="alphaearth"] .cs-hero { --project-hero-map: url("../img/alphaearth/hero-editorial-texture.png"); }
 
 body[data-project] {
   --case-paper: #fff;
@@ -3690,6 +3692,57 @@ body[data-project] .story-step.is-active .story-step__meta span {
   border-color: rgba(242,238,229,.18);
   background: transparent;
 }
+
+/* AlphaEarth food-availability case study — restrained evidence-state cards.
+   These are intentionally prose-led: the real historical screens stay in the
+   story stage, while the closing section names what remains conditional. */
+body[data-project="alphaearth"] .cs-hero::before { opacity: .5; }
+body[data-project="alphaearth"] .story-stage--media { background: #0e110d; }
+body[data-project="alphaearth"] .story-image { background: #0e110d; }
+.alphaearth-evidence-states {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.alphaearth-evidence-states article {
+  min-height: 260px;
+  padding: clamp(24px, 3.2vw, 42px);
+  border-right: 1px solid var(--line);
+}
+.alphaearth-evidence-states article:last-child { border-right: 0; }
+.alphaearth-evidence-states h3 {
+  max-width: 11ch;
+  margin: 34px 0 18px;
+  color: var(--ink);
+  font-size: clamp(26px, 2.7vw, 40px);
+  font-weight: 560;
+  line-height: 1;
+  letter-spacing: -.04em;
+}
+.alphaearth-evidence-states p { max-width: 30ch; color: var(--ink-soft); font-size: 15px; line-height: 1.6; }
+.alphaearth-state-label {
+  display: inline-block;
+  padding-bottom: 7px;
+  border-bottom: 2px solid currentColor;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.alphaearth-state-label--available { color: var(--accent-ink); }
+.alphaearth-state-label--context { color: #9a6516; }
+.alphaearth-state-label--withheld { color: #a34942; }
+.alphaearth-limitations-table td:first-child { width: 28%; color: var(--ink); font-weight: 600; }
+.alphaearth-sources { margin-top: clamp(56px, 7vw, 94px); }
+.alphaearth-noscript {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  padding: 18px 0 0;
+}
+.alphaearth-noscript img { width: 100%; height: auto; border: 1px solid rgba(242,238,229,.2); }
 body[data-project] .case-progress { display: none; }
 
 @media (max-width: 1100px) {
@@ -3720,6 +3773,9 @@ body[data-project] .case-progress { display: none; }
   body[data-project] .scrolly-static-steps { border-left: 0; }
   body[data-project] .story-step,
   body[data-project] .scrolly-static-step { min-height: auto; }
+  .alphaearth-evidence-states { grid-template-columns: 1fr; }
+  .alphaearth-evidence-states article { min-height: 0; border-right: 0; border-bottom: 1px solid var(--line); }
+  .alphaearth-evidence-states article:last-child { border-bottom: 0; }
 }
 
 @media (max-width: 700px) {
@@ -3825,4 +3881,7 @@ body[data-project] .case-progress { display: none; }
   body[data-project] .scrolly-static-caption { padding: 10px var(--gutter) 16px; }
   body[data-project] .cs-pager { min-height: auto; }
   body[data-project] .cs-pager a { min-height: 150px; padding: 34px var(--gutter); }
+  .alphaearth-evidence-states article { padding: 28px var(--gutter); }
+  .alphaearth-evidence-states h3 { margin-top: 24px; }
+  .alphaearth-limitations-table td:first-child { width: 34%; }
 }

@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+  <title id="title">Evidence boundary for the West Java paddy-screening case study</title>
+  <desc id="desc">Three evidence states: historical screening is available, three-district aggregate scenario context is conditional, and raw 2034 pixel projections are withheld.</desc>
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#151814"/>
+      <stop offset="1" stop-color="#080a09"/>
+    </linearGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0V48" fill="none" stroke="#f1eee3" stroke-opacity=".07"/>
+    </pattern>
+    <filter id="soft">
+      <feGaussianBlur stdDeviation="15"/>
+    </filter>
+  </defs>
+  <rect width="1440" height="900" fill="url(#paper)"/>
+  <rect width="1440" height="900" fill="url(#grid)"/>
+  <circle cx="206" cy="226" r="154" fill="#8fa552" fill-opacity=".12" filter="url(#soft)"/>
+  <circle cx="714" cy="674" r="196" fill="#d7a94b" fill-opacity=".08" filter="url(#soft)"/>
+  <text x="84" y="102" fill="#f1eee3" font-family="Arial, sans-serif" font-size="24" font-weight="700" letter-spacing="5">EVIDENCE BOUNDARY</text>
+  <text x="84" y="142" fill="#aeb0a9" font-family="Arial, sans-serif" font-size="21">What this project can show — and where it deliberately stops.</text>
+  <g transform="translate(84 232)">
+    <rect width="378" height="424" fill="#1b2119" stroke="#a4bc64" stroke-width="2"/>
+    <text x="32" y="56" fill="#a4bc64" font-family="Arial, sans-serif" font-size="18" font-weight="700" letter-spacing="3">AVAILABLE</text>
+    <path d="M32 91H346" stroke="#a4bc64" stroke-opacity=".35"/>
+    <text x="32" y="150" fill="#f1eee3" font-family="Arial, sans-serif" font-size="38" font-weight="700">Historical</text>
+    <text x="32" y="194" fill="#f1eee3" font-family="Arial, sans-serif" font-size="38" font-weight="700">screening</text>
+    <text x="32" y="260" fill="#c6c9c1" font-family="Arial, sans-serif" font-size="22">2017–2024</text>
+    <text x="32" y="302" fill="#c6c9c1" font-family="Arial, sans-serif" font-size="22">Model-derived paddy</text>
+    <text x="32" y="333" fill="#c6c9c1" font-family="Arial, sans-serif" font-size="22">probability surfaces</text>
+    <path d="M32 376h102" stroke="#a4bc64" stroke-width="5"/>
+  </g>
+  <g transform="translate(531 232)">
+    <rect width="378" height="424" fill="#221f17" stroke="#d8ad58" stroke-width="2"/>
+    <text x="32" y="56" fill="#d8ad58" font-family="Arial, sans-serif" font-size="18" font-weight="700" letter-spacing="3">CONTEXT ONLY</text>
+    <path d="M32 91H346" stroke="#d8ad58" stroke-opacity=".35"/>
+    <text x="32" y="150" fill="#f1eee3" font-family="Arial, sans-serif" font-size="38" font-weight="700">Aggregate</text>
+    <text x="32" y="194" fill="#f1eee3" font-family="Arial, sans-serif" font-size="38" font-weight="700">scenarios</text>
+    <text x="32" y="260" fill="#c9c5ba" font-family="Arial, sans-serif" font-size="22">Indramayu · Karawang</text>
+    <text x="32" y="291" fill="#c9c5ba" font-family="Arial, sans-serif" font-size="22">Subang · non-spatial</text>
+    <text x="32" y="333" fill="#c9c5ba" font-family="Arial, sans-serif" font-size="22">Sensitivity, not a forecast</text>
+    <path d="M32 376h102" stroke="#d8ad58" stroke-width="5"/>
+  </g>
+  <g transform="translate(978 232)">
+    <rect width="378" height="424" fill="#221718" stroke="#d68278" stroke-width="2" stroke-dasharray="12 11"/>
+    <text x="32" y="56" fill="#d68278" font-family="Arial, sans-serif" font-size="18" font-weight="700" letter-spacing="3">WITHHELD</text>
+    <path d="M32 91H346" stroke="#d68278" stroke-opacity=".35"/>
+    <text x="32" y="150" fill="#f1eee3" font-family="Arial, sans-serif" font-size="38" font-weight="700">Raw 2034</text>
+    <text x="32" y="194" fill="#f1eee3" font-family="Arial, sans-serif" font-size="38" font-weight="700">pixel map</text>
+    <text x="32" y="260" fill="#c9c1bd" font-family="Arial, sans-serif" font-size="22">No published spatial</text>
+    <text x="32" y="291" fill="#c9c1bd" font-family="Arial, sans-serif" font-size="22">allocation without an</text>
+    <text x="32" y="322" fill="#c9c1bd" font-family="Arial, sans-serif" font-size="22">independent validation set</text>
+    <path d="M32 376h102" stroke="#d68278" stroke-width="5"/>
+  </g>
+  <path d="M84 754H1356" stroke="#f1eee3" stroke-opacity=".2"/>
+  <text x="84" y="812" fill="#aeb0a9" font-family="Arial, sans-serif" font-size="20">A withheld map is a research result: it prevents an unvalidated spatial story from becoming a planning claim.</text>
+</svg>

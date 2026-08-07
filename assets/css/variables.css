@@ -41,6 +41,11 @@
   --color-highlight-soft: #ffe3df;
   --color-highlight-on: #ffffff;
   --color-highlight-rgb: 195 74 66;
+  --color-alphaearth: #7c9144;
+  --color-alphaearth-ink: #52681f;
+  --color-alphaearth-soft: #edf2d9;
+  --color-alphaearth-on: #142000;
+  --color-alphaearth-rgb: 124 145 68;
   --viz-surplus: #5f8d38;
   --viz-sentra: #2e8965;
   --viz-route: #2d77a4;
@@ -139,6 +144,11 @@
   --color-highlight-soft: #4a211d;
   --color-highlight-on: #35120f;
   --color-highlight-rgb: 255 154 143;
+  --color-alphaearth: #b8d36d;
+  --color-alphaearth-ink: #d4e997;
+  --color-alphaearth-soft: #33421a;
+  --color-alphaearth-on: #172400;
+  --color-alphaearth-rgb: 184 211 109;
   --viz-surplus: #93c85f;
   --viz-sentra: #74cfa6;
   --viz-route: #84c9f2;
@@ -203,6 +213,15 @@ body[data-project="pangan"],
   --accent-soft: var(--color-secondary-soft);
   --on-accent: var(--color-secondary-on);
   --accent-rgb: var(--color-secondary-rgb);
+}
+
+body[data-project="alphaearth"],
+.card[data-project="alphaearth"] {
+  --accent: var(--color-alphaearth);
+  --accent-ink: var(--color-alphaearth-ink);
+  --accent-soft: var(--color-alphaearth-soft);
+  --on-accent: var(--color-alphaearth-on);
+  --accent-rgb: var(--color-alphaearth-rgb);
 }
 
 body[data-project="mbr"],
