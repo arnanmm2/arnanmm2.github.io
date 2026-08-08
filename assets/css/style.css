@@ -1664,9 +1664,17 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 700; line-height
 /* ============================================================
    SCROLL REVEAL
    ============================================================ */
-.reveal { opacity: 0; transform: translateY(26px); transition: opacity .9s var(--emph), transform .9s var(--emph); }
-.reveal.in { opacity: 1; transform: none; }
-@media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+.reveal { opacity: 1; transform: none; }
+/* Content is readable by default. JavaScript opts into the entrance effect only
+   after it is running, and main.js has a short fail-safe that reveals everything. */
+.js-reveal .reveal { opacity: 0; transform: translateY(26px); transition: opacity .9s var(--emph), transform .9s var(--emph); }
+.js-reveal .reveal.in { opacity: 1; transform: none; }
+html:not(.js-reveal) .figure .pl-stage,
+html:not(.js-reveal) .figure .pl-conn { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .js-reveal .reveal,
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
 
 /* ============================================================
    RESPONSIVE
@@ -3386,7 +3394,7 @@ body[data-project="transit"] .cs-hero { --project-hero-map: url("../img/maps/her
 body[data-project="pangan"] .cs-hero { --project-hero-map: url("../img/maps/hero-pangan.svg"); }
 body[data-project="mbr"] .cs-hero { --project-hero-map: url("../img/maps/hero-mbr.svg"); }
 body[data-project="cbd"] .cs-hero { --project-hero-map: url("../img/maps/hero-cbd.svg"); }
-body[data-project="alphaearth"] .cs-hero { --project-hero-map: url("../img/alphaearth/hero-editorial-texture.png"); }
+body[data-project="alphaearth"] .cs-hero { --project-hero-map: none; }
 
 body[data-project] {
   --case-paper: #fff;
@@ -3693,12 +3701,279 @@ body[data-project] .story-step.is-active .story-step__meta span {
   background: transparent;
 }
 
-/* AlphaEarth food-availability case study — restrained evidence-state cards.
-   These are intentionally prose-led: the real historical screens stay in the
-   story stage, while the closing section names what remains conditional. */
-body[data-project="alphaearth"] .cs-hero::before { opacity: .5; }
+/* AlphaEarth food-availability case study — evidence led, not decoration led. */
+body[data-project="alphaearth"] .cs-hero {
+  grid-template-rows: auto minmax(0, 1fr) auto auto auto;
+  grid-template-areas:
+    "back back"
+    "title title"
+    "lede ."
+    "meta meta"
+    "actions actions";
+}
+body[data-project="alphaearth"] .cs-hero::before { opacity: .34; }
+body[data-project="alphaearth"] .cs-hero h1 { max-width: 10ch; font-size: clamp(62px, 7vw, 112px); }
+body[data-project="alphaearth"] .cs-hero .lede { max-width: 53ch; }
+.alphaearth-hero-meta dt { display: block; margin-bottom: 7px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; }
+.alphaearth-hero-actions {
+  grid-area: actions; display: flex; flex-wrap: wrap; gap: 22px; align-items: center;
+  padding-top: 4px; font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+}
+.alphaearth-hero-actions a { color: rgba(243,239,230,.78); border-bottom: 1px solid rgba(243,239,230,.28); padding-bottom: 7px; }
+.alphaearth-hero-actions a:hover, .alphaearth-hero-actions a:focus-visible { color: var(--accent); border-color: var(--accent); }
+
+.alphaearth-brief { padding: clamp(40px, 6vw, 80px) 0 clamp(28px, 4vw, 52px); border-bottom: 1px solid var(--line); }
+.alphaearth-glance { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--ink); border-bottom: 1px solid var(--line); }
+.alphaearth-glance > div { min-height: 132px; padding: 18px clamp(16px, 2.4vw, 34px) 20px 0; border-right: 1px solid var(--line); }
+.alphaearth-glance > div + div { padding-left: clamp(16px, 2.4vw, 34px); }
+.alphaearth-glance > div:last-child { border-right: 0; }
+.alphaearth-glance__value { display: block; color: var(--accent-ink); font-family: var(--font-display); font-size: clamp(30px, 3.3vw, 48px); font-weight: 560; line-height: .96; letter-spacing: -.05em; }
+.alphaearth-glance__label { display: block; max-width: 24ch; margin-top: 13px; color: var(--ink-soft); font-family: var(--font-mono); font-size: 10.5px; line-height: 1.55; letter-spacing: .04em; text-transform: uppercase; }
+.alphaearth-contribution { display: grid; grid-template-columns: minmax(150px, .28fr) minmax(0, .72fr); gap: clamp(18px, 5vw, 70px); margin-top: clamp(30px, 4vw, 48px); }
+.alphaearth-contribution__label,
+.alphaearth-context-note__label,
+.alphaearth-quality-gate__label,
+.alphaearth-next-action__label { color: var(--accent-ink); font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
+.alphaearth-contribution > p:last-child { max-width: 64ch; color: var(--ink); font-family: var(--font-display); font-size: clamp(19px, 2vw, 28px); font-weight: 520; line-height: 1.24; letter-spacing: -.025em; }
+
 body[data-project="alphaearth"] .story-stage--media { background: #0e110d; }
 body[data-project="alphaearth"] .story-image { background: #0e110d; }
+body[data-project="alphaearth"] .story-caption { bottom: 118px; }
+.alphaearth-probability-legend { width: min(278px, calc(100% - 36px)); }
+.story-layer-legend__swatch--probability { width: 54px; background: linear-gradient(90deg, #18231c 0%, #47745a 36%, #9dbb78 70%, #eff0c9 100%); }
+.story-layer-legend__swatch--candidate-change { width: 54px; background: linear-gradient(90deg, #24224a 0%, #3d7cb7 34%, #efc94e 67%, #cc593e 100%); }
+.alphaearth-probability-legend__note { display: block; margin-top: 9px; color: var(--muted); font-family: var(--font-mono); font-size: 9.5px; line-height: 1.45; letter-spacing: .03em; }
+
+/* The historical comparison remains a map inspection tool: the divider never
+   computes or colours a change class. The candidate-change frame is separate. */
+.alphaearth-swipe {
+  --alphaearth-swipe: 50%;
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  background: #0e110d;
+  /* Let vertical touch gestures continue scrolling the story; the custom
+     pointer handler only uses horizontal movement for the comparison. */
+  touch-action: pan-y;
+}
+.alphaearth-swipe[hidden] { display: none; }
+.alphaearth-swipe__base,
+.alphaearth-swipe__overlay > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  object-fit: contain;
+  padding: clamp(14px, 2.4vw, 28px);
+  background: #0e110d;
+}
+.alphaearth-swipe__overlay {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  clip-path: inset(0 calc(100% - var(--alphaearth-swipe)) 0 0);
+}
+.alphaearth-swipe__handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--alphaearth-swipe);
+  z-index: 3;
+  width: 2px;
+  background: rgba(255,255,255,.92);
+  box-shadow: 0 0 0 1px rgba(0,0,0,.28), 0 0 18px rgba(0,0,0,.45);
+  transform: translateX(-1px);
+  pointer-events: none;
+}
+.alphaearth-swipe__handle::before {
+  content: "↔";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,.66);
+  border-radius: 50%;
+  background: rgba(11,14,12,.92);
+  color: #f2eee5;
+  font-family: var(--font-mono);
+  font-size: 16px;
+  transform: translate(-50%, -50%);
+}
+.alphaearth-swipe__label {
+  position: absolute;
+  top: 18px;
+  z-index: 4;
+  padding: 6px 8px;
+  border: 1px solid rgba(242,238,229,.32);
+  background: rgba(11,14,12,.82);
+  color: rgba(242,238,229,.9);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .09em;
+  line-height: 1;
+}
+.alphaearth-swipe__label--left { left: 18px; }
+.alphaearth-swipe__label--right { right: 18px; }
+.alphaearth-swipe__range {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: ew-resize;
+  opacity: 0;
+}
+.alphaearth-swipe__range:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; opacity: .06; }
+body[data-project="alphaearth"] .project-story.is-compare .story-image {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* SVGs are generated from the compact public evidence manifest. The tables
+   below them remain the primary text fallback for screen readers and no-JS. */
+.alphaearth-chart-stage { overflow: hidden; }
+.alphaearth-story-chart { display: block; width: 100%; height: 100%; }
+.alphaearth-chart-stage .story-map-card { z-index: 5; }
+.alphaearth-chart__scope-unit,
+.alphaearth-chart__pilot-card {
+  fill: rgba(242,238,229,.055);
+  stroke: rgba(242,238,229,.42);
+  stroke-width: 1.2;
+  vector-effect: non-scaling-stroke;
+}
+.alphaearth-chart__scope-label,
+.alphaearth-chart__aggregate-label,
+.alphaearth-chart__pilot-value,
+.alphaearth-chart__gate-title {
+  fill: #f2eee5;
+  font-family: var(--font-display);
+  font-weight: 620;
+  letter-spacing: -.02em;
+}
+.alphaearth-chart__scope-label { font-size: 24px; }
+.alphaearth-chart__scope-note,
+.alphaearth-chart__pilot-label,
+.alphaearth-chart__axis-label,
+.alphaearth-chart__annotation,
+.alphaearth-chart__range-label,
+.alphaearth-chart__gate-copy {
+  fill: rgba(242,238,229,.61);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.alphaearth-chart__operator { fill: var(--accent); font-family: var(--font-display); font-size: 31px; }
+.alphaearth-chart__connector { stroke: var(--accent); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.alphaearth-chart__aggregate-box { fill: rgba(143,170,98,.12); stroke: rgba(178,207,126,.64); stroke-width: 1.2; vector-effect: non-scaling-stroke; }
+.alphaearth-chart__aggregate-label { font-size: 21px; }
+.alphaearth-chart__end-label { font-family: var(--font-mono); font-size: 12px; font-weight: 600; }
+.alphaearth-chart__gate-box { fill: rgba(180,73,63,.11); stroke: rgba(229,120,104,.66); stroke-width: 1.1; vector-effect: non-scaling-stroke; }
+.alphaearth-chart__gate-title { font-size: 25px; fill: #f3b1a6; }
+.alphaearth-chart__pilot-value { font-size: 35px; }
+.alphaearth-story-chart .story-chart-title { fill: #f2eee5; }
+.alphaearth-story-chart .story-chart-subtitle,
+.alphaearth-story-chart .story-chart-label,
+.alphaearth-story-chart .story-chart-value { fill: rgba(242,238,229,.67); }
+.alphaearth-story-chart .story-chart-axis { stroke: rgba(242,238,229,.16); }
+.alphaearth-story-chart.is-animated .alphaearth-chart__bar,
+.alphaearth-story-chart.is-animated .story-chart-bar,
+.alphaearth-story-chart.is-animated .alphaearth-chart__range {
+  transform-box: fill-box;
+  transform-origin: left center;
+  transition: transform .72s var(--emph), opacity .42s var(--emph);
+}
+.alphaearth-story-chart.is-animated:not(.is-drawn) .alphaearth-chart__bar,
+.alphaearth-story-chart.is-animated:not(.is-drawn) .story-chart-bar,
+.alphaearth-story-chart.is-animated:not(.is-drawn) .alphaearth-chart__range { opacity: .14; transform: scaleX(.02); }
+.alphaearth-story-chart.is-animated .alphaearth-chart__line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset .9s var(--emph), opacity .4s var(--emph);
+}
+.alphaearth-story-chart.is-animated:not(.is-drawn) .alphaearth-chart__line { opacity: .2; stroke-dashoffset: 1; }
+.alphaearth-story-chart.is-animated:not(.is-drawn) .alphaearth-chart__point,
+.alphaearth-story-chart.is-animated:not(.is-drawn) .alphaearth-chart__end-label { opacity: 0; }
+.alphaearth-story-chart.is-animated .alphaearth-chart__point,
+.alphaearth-story-chart.is-animated .alphaearth-chart__end-label { transition: opacity .36s .52s var(--emph); }
+
+.alphaearth-boundary-card {
+  position: absolute;
+  inset: clamp(26px, 7vw, 86px) clamp(22px, 6vw, 78px) auto;
+  z-index: 2;
+  padding: clamp(24px, 4vw, 46px);
+  border: 1px solid rgba(242,238,229,.34);
+  background: linear-gradient(135deg, rgba(143,170,98,.13), rgba(9,11,11,.88) 56%);
+}
+.alphaearth-boundary-card__index { display: block; color: var(--accent); font-family: var(--font-mono); font-size: 11px; letter-spacing: .11em; }
+.alphaearth-boundary-card h4 { max-width: 16ch; margin: 22px 0 16px; color: #f2eee5; font-family: var(--font-display); font-size: clamp(30px, 4vw, 52px); font-weight: 590; line-height: .94; letter-spacing: -.045em; }
+.alphaearth-boundary-card p { max-width: 52ch; color: rgba(242,238,229,.66); font-size: 15px; line-height: 1.58; }
+.alphaearth-boundary-list {
+  position: absolute;
+  right: clamp(22px, 6vw, 78px);
+  bottom: 34px;
+  left: clamp(22px, 6vw, 78px);
+  z-index: 2;
+  display: flex;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.alphaearth-boundary-list li {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 8px 7px;
+  border-top: 2px solid rgba(242,238,229,.21);
+  color: rgba(242,238,229,.46);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+.alphaearth-boundary-list li span { display: block; margin-bottom: 4px; font-size: 10px; }
+.alphaearth-boundary-list li.is-active { border-color: var(--accent); color: #f2eee5; }
+
+.alphaearth-data-table {
+  width: min(100%, 1120px);
+  margin: clamp(32px, 5vw, 64px) auto 0;
+  border-top: 1px solid rgba(242,238,229,.26);
+  border-bottom: 1px solid rgba(242,238,229,.26);
+}
+.alphaearth-data-table summary {
+  padding: 16px 0;
+  color: rgba(242,238,229,.86);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.alphaearth-data-table summary::marker { color: var(--accent); }
+.alphaearth-data-table__scroll { overflow-x: auto; padding: 0 0 18px; }
+.alphaearth-data-table table { width: 100%; min-width: 620px; border-collapse: collapse; }
+.alphaearth-data-table th,
+.alphaearth-data-table td { padding: 12px 13px; border-top: 1px solid rgba(242,238,229,.15); color: rgba(242,238,229,.72); font-size: 13px; line-height: 1.4; text-align: left; vertical-align: top; }
+.alphaearth-data-table th { color: #f2eee5; font-family: var(--font-mono); font-size: 10px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; }
+.alphaearth-data-table td:first-child { color: #f2eee5; font-weight: 600; }
+
+.alphaearth-context-note,
+.alphaearth-quality-gate,
+.alphaearth-next-action { border-top: 1px solid var(--ink); border-bottom: 1px solid var(--line); }
+.alphaearth-context-note { margin-top: clamp(42px, 6vw, 82px); padding: clamp(24px, 4vw, 48px) 0; }
+.alphaearth-context-note h3,
+.alphaearth-quality-gate h3 { max-width: 18ch; margin: 22px 0 16px; color: var(--ink); font-size: clamp(29px, 3.8vw, 52px); font-weight: 560; line-height: .98; letter-spacing: -.045em; }
+.alphaearth-context-note p,
+.alphaearth-quality-gate p { max-width: 76ch; color: var(--ink-soft); font-size: 16px; line-height: 1.65; }
+.alphaearth-context-note__scope { margin-top: 14px; color: var(--muted) !important; font-family: var(--font-mono); font-size: 11.5px !important; letter-spacing: .02em; }
+body[data-project="alphaearth"] .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.alphaearth-quality-gate { margin-top: clamp(32px, 4vw, 54px); padding: clamp(24px, 4vw, 48px) 0; }
+.alphaearth-figure-scope { position: absolute; left: 14px; top: 14px; z-index: 3; max-width: min(500px, calc(100% - 28px)); padding: 8px 10px; background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); color: var(--ink-soft); font-family: var(--font-mono); font-size: 10px; line-height: 1.45; letter-spacing: .025em; }
+
 .alphaearth-evidence-states {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -3735,15 +4010,29 @@ body[data-project="alphaearth"] .story-image { background: #0e110d; }
 .alphaearth-state-label--context { color: #9a6516; }
 .alphaearth-state-label--withheld { color: #a34942; }
 .alphaearth-limitations-table td:first-child { width: 28%; color: var(--ink); font-weight: 600; }
+.alphaearth-next-action { margin-top: clamp(50px, 7vw, 90px); padding: clamp(24px, 4vw, 46px) 0; }
+.alphaearth-next-action p { max-width: 66ch; margin-top: 18px; color: var(--ink); font-family: var(--font-display); font-size: clamp(20px, 2.4vw, 33px); font-weight: 520; line-height: 1.16; letter-spacing: -.032em; }
 .alphaearth-sources { margin-top: clamp(56px, 7vw, 94px); }
+.alphaearth-provenance { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.alphaearth-provenance > div { padding: 22px clamp(16px, 2.4vw, 32px) 26px 0; border-right: 1px solid var(--line); }
+.alphaearth-provenance > div + div { padding-left: clamp(16px, 2.4vw, 32px); }
+.alphaearth-provenance > div:last-child { border-right: 0; }
+.alphaearth-provenance h3 { color: var(--ink); font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; }
+.alphaearth-provenance p { margin-top: 12px; color: var(--ink-soft); font-size: 14px; line-height: 1.55; }
+.alphaearth-provenance a { color: var(--accent-ink); text-decoration: underline; text-underline-offset: 3px; }
+.alphaearth-provenance__attribution { color: var(--muted) !important; font-family: var(--font-mono); font-size: 10.5px !important; }
+.alphaearth-cta { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 38px; }
 .alphaearth-noscript {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
   padding: 18px 0 0;
 }
+.alphaearth-noscript figure { min-width: 0; }
 .alphaearth-noscript img { width: 100%; height: auto; border: 1px solid rgba(242,238,229,.2); }
+.alphaearth-noscript figcaption { margin-top: 8px; color: rgba(242,238,229,.68); font-family: var(--font-mono); font-size: 10px; line-height: 1.45; }
 body[data-project] .case-progress { display: none; }
+@media (min-width: 981px) { body[data-project="alphaearth"] .case-progress { display: grid; } }
 
 @media (max-width: 1100px) {
   .editorial-hero__media[data-city-map-stage] { padding: clamp(24px, 5vw, 54px); }
@@ -3776,6 +4065,10 @@ body[data-project] .case-progress { display: none; }
   .alphaearth-evidence-states { grid-template-columns: 1fr; }
   .alphaearth-evidence-states article { min-height: 0; border-right: 0; border-bottom: 1px solid var(--line); }
   .alphaearth-evidence-states article:last-child { border-bottom: 0; }
+  body[data-project="alphaearth"] .cs-hero {
+    grid-template-rows: auto auto auto auto auto;
+    grid-template-areas: "back" "title" "lede" "meta" "actions";
+  }
 }
 
 @media (max-width: 700px) {
@@ -3884,4 +4177,50 @@ body[data-project] .case-progress { display: none; }
   .alphaearth-evidence-states article { padding: 28px var(--gutter); }
   .alphaearth-evidence-states h3 { margin-top: 24px; }
   .alphaearth-limitations-table td:first-child { width: 34%; }
+  body[data-project="alphaearth"] .cs-hero h1 { font-size: clamp(46px, 13vw, 60px); }
+  .alphaearth-hero-actions { gap: 16px; font-size: 10px; }
+  .alphaearth-glance,
+  .alphaearth-provenance,
+  body[data-project="alphaearth"] .stats { grid-template-columns: 1fr; }
+  .alphaearth-glance > div,
+  .alphaearth-provenance > div { min-height: 0; padding: 18px 0; border-right: 0; border-bottom: 1px solid var(--line); }
+  .alphaearth-glance > div + div,
+  .alphaearth-provenance > div + div { padding-left: 0; }
+  .alphaearth-glance > div:last-child,
+  .alphaearth-provenance > div:last-child { border-bottom: 0; }
+  .alphaearth-contribution { grid-template-columns: 1fr; gap: 14px; }
+  .alphaearth-contribution > p:last-child { font-size: 20px; line-height: 1.3; }
+  body[data-project="alphaearth"] .story-caption { bottom: 102px; left: 10px; right: 10px; }
+  .alphaearth-probability-legend { left: 10px; top: 10px; width: min(260px, calc(100% - 20px)); }
+  .alphaearth-swipe__base,
+  .alphaearth-swipe__overlay > img { padding: 10px; }
+  .alphaearth-swipe__label { top: 10px; font-size: 9px; }
+  .alphaearth-swipe__label--left { left: 10px; }
+  .alphaearth-swipe__label--right { right: 10px; }
+  .alphaearth-swipe__handle::before { width: 30px; height: 30px; font-size: 14px; }
+  .alphaearth-chart-stage .story-map-card { z-index: 5; }
+  .alphaearth-chart__scope-label { font-size: 20px; }
+  .alphaearth-chart__scope-note,
+  .alphaearth-chart__axis-label,
+  .alphaearth-chart__annotation,
+  .alphaearth-chart__range-label,
+  .alphaearth-chart__gate-copy { font-size: 10px; }
+  .alphaearth-boundary-card { inset: 24px 18px auto; padding: 24px; }
+  .alphaearth-boundary-card h4 { font-size: clamp(28px, 8vw, 40px); }
+  .alphaearth-boundary-card p { font-size: 13px; }
+  .alphaearth-boundary-list { right: 18px; bottom: 18px; left: 18px; gap: 4px; }
+  .alphaearth-boundary-list li { padding: 6px 3px; font-size: 7px; }
+  .alphaearth-boundary-list li span { font-size: 8px; }
+  .alphaearth-data-table { margin-top: 30px; }
+  .alphaearth-figure-scope { position: static; display: block; max-width: none; border: 0; border-bottom: 1px solid var(--line); }
+  .alphaearth-next-action p { font-size: 22px; line-height: 1.22; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-project="alphaearth"] .story-visual { position: relative; top: auto; }
+  body[data-project="alphaearth"] .story-stage { transform: none !important; }
+  .alphaearth-swipe__handle,
+  .alphaearth-swipe__overlay,
+  .alphaearth-story-chart *,
+  .alphaearth-boundary-list li { transition: none !important; }
 }

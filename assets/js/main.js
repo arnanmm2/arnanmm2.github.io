@@ -267,13 +267,30 @@
 
   /* ---------- Scroll reveal ---------- */
   var reveals = document.querySelectorAll(".reveal");
-  if ("IntersectionObserver" in window && reveals.length) {
+  var reduceRevealMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if ("IntersectionObserver" in window && reveals.length && !reduceRevealMotion) {
+    document.documentElement.classList.add("js-reveal");
+    function revealNow(el) {
+      el.classList.add("in");
+      io.unobserve(el);
+    }
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
-        if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+        if (en.isIntersecting) revealNow(en.target);
       });
     }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
-    reveals.forEach(function (el) { io.observe(el); });
+    reveals.forEach(function (el) {
+      var rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 1.15 && rect.bottom > -120) revealNow(el);
+      else io.observe(el);
+    });
+    /* Never leave substantive copy blank if an observer is delayed, cached, or skipped. */
+    window.setTimeout(function () {
+      reveals.forEach(function (el) { revealNow(el); });
+    }, 1200);
+    window.addEventListener("pageshow", function () {
+      reveals.forEach(function (el) { revealNow(el); });
+    });
   } else {
     reveals.forEach(function (el) { el.classList.add("in"); });
   }

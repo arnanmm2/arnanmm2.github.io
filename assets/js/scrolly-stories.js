@@ -621,13 +621,89 @@
   function initImageStory(root) {
     var img = $("[data-story-image]", root);
     var caption = $("[data-story-caption]", root);
+    var legendNote = $("[data-story-legend-note]", root);
+    var swipe = $("[data-story-swipe]", root);
+    var swipeOverlay = $("[data-story-swipe-overlay]", root);
+    var swipeHandle = $("[data-story-swipe-handle]", root);
+    var swipeRange = $("[data-story-swipe-range]", root);
     if (!img) return;
+
+    function setSwipe(value) {
+      var n = Math.max(0, Math.min(100, Number(value) || 0));
+      if (swipe) swipe.style.setProperty("--alphaearth-swipe", n + "%");
+      if (swipeOverlay) swipeOverlay.style.setProperty("--alphaearth-swipe", n + "%");
+      if (swipeHandle) swipeHandle.style.setProperty("--alphaearth-swipe", n + "%");
+      if (swipeRange) swipeRange.value = String(n);
+    }
+
+    function setSwipeFromPointer(event) {
+      if (!swipe || !root.classList.contains("is-compare")) return;
+      var rect = swipe.getBoundingClientRect();
+      if (!rect.width) return;
+      setSwipe((event.clientX - rect.left) / rect.width * 100);
+    }
+
+    var swipeDragging = false;
+    var swipePointerStart = null;
+    if (swipe) {
+      swipe.addEventListener("pointerdown", function (event) {
+        swipeDragging = false;
+        swipePointerStart = { x: event.clientX, y: event.clientY };
+      });
+      swipe.addEventListener("pointermove", function (event) {
+        if (!swipePointerStart) return;
+        var dx = event.clientX - swipePointerStart.x;
+        var dy = event.clientY - swipePointerStart.y;
+        if (!swipeDragging) {
+          if (Math.abs(dx) < 7 && Math.abs(dy) < 7) return;
+          // Let vertical touch movement remain a normal page scroll. A swipe
+          // becomes a comparison control only after horizontal intent is clear.
+          if (Math.abs(dy) > Math.abs(dx)) {
+            swipePointerStart = null;
+            return;
+          }
+          swipeDragging = true;
+        }
+        if (swipeDragging) setSwipeFromPointer(event);
+      });
+      ["pointerup", "pointercancel", "pointerleave"].forEach(function (name) {
+        swipe.addEventListener(name, function () {
+          swipeDragging = false;
+          swipePointerStart = null;
+        });
+      });
+    }
+
+    if (swipeRange) {
+      swipeRange.addEventListener("input", function () { setSwipe(swipeRange.value); });
+      swipeRange.addEventListener("keydown", function (event) {
+        var current = Number(swipeRange.value) || 0;
+        var next = current;
+        if (event.key === "ArrowLeft" || event.key === "ArrowDown") next -= 1;
+        else if (event.key === "ArrowRight" || event.key === "ArrowUp") next += 1;
+        else if (event.key === "PageDown") next -= 10;
+        else if (event.key === "PageUp") next += 10;
+        else if (event.key === "Home") next = 0;
+        else if (event.key === "End") next = 100;
+        else return;
+        event.preventDefault();
+        setSwipe(next);
+      });
+    }
 
     bindStory(root, function (step) {
       var src = step.getAttribute("data-image");
       var alt = step.getAttribute("data-alt") || step.querySelector("h4") && step.querySelector("h4").textContent || "";
       var cap = step.getAttribute("data-caption") || "";
-      if (src && img.getAttribute("src") !== src) {
+      var compare = step.hasAttribute("data-compare");
+      root.classList.toggle("is-compare", compare);
+      if (compare) img.setAttribute("aria-hidden", "true");
+      else img.removeAttribute("aria-hidden");
+      if (swipe) {
+        swipe.hidden = !compare;
+        if (compare) setSwipe(step.getAttribute("data-swipe-start") || 50);
+      }
+      if (!compare && src && img.getAttribute("src") !== src) {
         img.classList.add("is-swapping");
         window.setTimeout(function () {
           img.src = src;
@@ -636,11 +712,352 @@
         }, 120);
       }
       if (caption) caption.textContent = cap;
+      if (legendNote) legendNote.textContent = step.getAttribute("data-legend-note") || "";
       setText(root, "[data-story-kpi]", step.getAttribute("data-kpi"));
       setText(root, "[data-story-label]", step.getAttribute("data-label"));
       setText(root, "[data-story-note]", step.getAttribute("data-note"));
     });
 
+    root.classList.add("is-loaded");
+  }
+
+  function alphaChartText(svg, value, attrs) {
+    var node = svgEl("text", attrs || {});
+    node.textContent = value;
+    svg.appendChild(node);
+    return node;
+  }
+
+  function alphaChartTitle(svg, title, subtitle) {
+    alphaChartText(svg, title, { "class": "story-chart-title", x: 42, y: 48 });
+    alphaChartText(svg, subtitle, { "class": "story-chart-subtitle", x: 42, y: 74 });
+  }
+
+  function alphaShortHa(value) {
+    var n = Number(value) || 0;
+    return Math.round(n / 1000).toLocaleString("en-US") + "k";
+  }
+
+  function startAlphaChartMotion(svg) {
+    if (!svg) return;
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    svg.classList.remove("is-drawn");
+    svg.classList.add("is-animated");
+    if (reduce) {
+      svg.classList.add("is-drawn");
+      return;
+    }
+    window.requestAnimationFrame(function () { svg.classList.add("is-drawn"); });
+  }
+
+  function renderAlphaScenarioContext(svg) {
+    if (!svg) return;
+    svg.textContent = "";
+    svg.setAttribute("viewBox", "0 0 840 500");
+    svg.setAttribute("aria-label", "Three-district aggregate scope diagram for Indramayu, Karawang, and Subang");
+    alphaChartTitle(svg, "The unit is an aggregate, not a map", "Three pilot kabupaten combine into one conditional scenario total");
+
+    ["Indramayu", "Karawang", "Subang"].forEach(function (name, i) {
+      var x = 58 + i * 256;
+      svg.appendChild(svgEl("rect", {
+        "class": "alphaearth-chart__scope-unit",
+        x: x,
+        y: 156,
+        width: 208,
+        height: 132,
+        rx: 6
+      }));
+      alphaChartText(svg, name, {
+        "class": "alphaearth-chart__scope-label",
+        x: x + 104,
+        y: 218,
+        "text-anchor": "middle"
+      });
+      alphaChartText(svg, "whole district only", {
+        "class": "alphaearth-chart__scope-note",
+        x: x + 104,
+        y: 244,
+        "text-anchor": "middle"
+      });
+      if (i < 2) {
+        alphaChartText(svg, "+", {
+          "class": "alphaearth-chart__operator",
+          x: x + 228,
+          y: 230,
+          "text-anchor": "middle"
+        });
+      }
+    });
+
+    svg.appendChild(svgEl("line", {
+      "class": "alphaearth-chart__connector",
+      x1: 420, y1: 306, x2: 420, y2: 354
+    }));
+    svg.appendChild(svgEl("rect", {
+      "class": "alphaearth-chart__aggregate-box",
+      x: 170, y: 358, width: 500, height: 76, rx: 6
+    }));
+    alphaChartText(svg, "conditional aggregate paddy-area scenario to 2034", {
+      "class": "alphaearth-chart__aggregate-label",
+      x: 420, y: 404, "text-anchor": "middle"
+    });
+  }
+
+  function renderAlphaScenarioArea(svg, data) {
+    if (!svg || !data || !data.scenario) return;
+    var series = (data.scenario.area_series || []).filter(function (item) {
+      return item.id !== "S4_production_intensification";
+    });
+    if (!series.length) return;
+    var years = series[0].values.map(function (row) { return Number(row.year); });
+    var all = [];
+    series.forEach(function (item) { item.values.forEach(function (row) { all.push(Number(row.area_ha)); }); });
+    var max = Math.ceil(Math.max.apply(Math, all) / 50000) * 50000;
+    var width = 840, height = 500, left = 70, right = 150, top = 98, bottom = 64;
+    function x(i) { return left + i / Math.max(1, years.length - 1) * (width - left - right); }
+    function y(value) { return height - bottom - Number(value) / max * (height - top - bottom); }
+    function path(rows) {
+      return rows.map(function (row, i) {
+        return (i ? "L" : "M") + x(i).toFixed(1) + " " + y(row.area_ha).toFixed(1);
+      }).join(" ");
+    }
+
+    svg.textContent = "";
+    svg.setAttribute("viewBox", "0 0 840 500");
+    svg.setAttribute("aria-label", "Conditional paddy-area scenario paths from 2025 to 2034 across the three pilot districts");
+    alphaChartTitle(svg, "Conditional aggregate paddy-area paths", "Indramayu + Karawang + Subang · hectares · no spatial allocation");
+
+    [0, .25, .5, .75, 1].forEach(function (fraction) {
+      var value = max * fraction;
+      var yy = y(value);
+      svg.appendChild(svgEl("line", {
+        "class": "story-chart-axis", x1: left, y1: yy.toFixed(1), x2: width - right + 16, y2: yy.toFixed(1)
+      }));
+      alphaChartText(svg, alphaShortHa(value), {
+        "class": "alphaearth-chart__axis-label", x: left - 12, y: yy + 4, "text-anchor": "end"
+      });
+    });
+
+    years.forEach(function (year, i) {
+      if (year !== 2025 && year !== 2030 && year !== 2034) return;
+      alphaChartText(svg, String(year), {
+        "class": "story-chart-label", x: x(i), y: height - 26, "text-anchor": "middle"
+      });
+    });
+
+    series.forEach(function (item) {
+      var line = svgEl("path", {
+        "class": "alphaearth-chart__line", d: path(item.values), fill: "none", stroke: item.color,
+        "stroke-width": 4, "stroke-linecap": "round", "stroke-linejoin": "round", pathLength: 1
+      });
+      svg.appendChild(line);
+      var end = item.values[item.values.length - 1];
+      svg.appendChild(svgEl("circle", { "class": "alphaearth-chart__point", cx: x(item.values.length - 1), cy: y(end.area_ha), r: 5, fill: item.color }));
+      alphaChartText(svg, item.label.split(" · ")[0] + " " + alphaShortHa(end.area_ha), {
+        "class": "alphaearth-chart__end-label", x: x(item.values.length - 1) + 14, y: y(end.area_ha) + 4, fill: item.color
+      });
+    });
+    alphaChartText(svg, "S4 uses the same area path as S1; its intervention is production, not an area allocation.", {
+      "class": "alphaearth-chart__annotation", x: left, y: height - 4
+    });
+  }
+
+  function renderAlphaScenarioUncertainty(svg, data) {
+    if (!svg || !data || !data.scenario) return;
+    var rows = data.scenario.uncertainty_2034 || [];
+    var max = Math.ceil(rows.reduce(function (m, row) { return Math.max(m, Number(row.p95_ha) || 0); }, 1) / 50000) * 50000;
+    var width = 840, height = 500, left = 196, right = 86, top = 124, rowGap = 59;
+    function x(value) { return left + Number(value) / max * (width - left - right); }
+
+    svg.textContent = "";
+    svg.setAttribute("viewBox", "0 0 840 500");
+    svg.setAttribute("aria-label", "Conditional 2034 P05 to P95 aggregate paddy-area ranges across the three pilot districts");
+    alphaChartTitle(svg, "2034 conditional ranges", "P05–P95 aggregate paddy area · three pilot districts · hectares");
+    [0, .25, .5, .75, 1].forEach(function (fraction) {
+      var value = max * fraction;
+      var xx = x(value);
+      svg.appendChild(svgEl("line", {
+        "class": "story-chart-axis", x1: xx.toFixed(1), y1: top - 16, x2: xx.toFixed(1), y2: height - 52
+      }));
+      alphaChartText(svg, alphaShortHa(value), {
+        "class": "alphaearth-chart__axis-label", x: xx, y: height - 27, "text-anchor": "middle"
+      });
+    });
+    rows.forEach(function (row, i) {
+      var y = top + i * rowGap;
+      alphaChartText(svg, row.label.split(" · ")[0], {
+        "class": "story-chart-label", x: 42, y: y + 5
+      });
+      var range = svgEl("line", {
+        "class": "alphaearth-chart__range", x1: x(row.p05_ha), y1: y, x2: x(row.p95_ha), y2: y,
+        stroke: row.color, "stroke-width": 10, "stroke-linecap": "round"
+      });
+      svg.appendChild(range);
+      svg.appendChild(svgEl("circle", { "class": "alphaearth-chart__median", cx: x(row.p50_ha), cy: y, r: 8, fill: row.color }));
+      alphaChartText(svg, "P50 " + alphaShortHa(row.p50_ha), {
+        "class": "alphaearth-chart__range-label", x: width - 22, y: y + 5, "text-anchor": "end"
+      });
+    });
+    alphaChartText(svg, "Line = P05–P95 conditional range · dot = P50 · wide overlap is part of the result.", {
+      "class": "alphaearth-chart__annotation", x: 42, y: height - 4
+    });
+  }
+
+  function renderAlphaScenarioGate(svg, data) {
+    if (!svg || !data || !data.quality_gate) return;
+    var gate = data.quality_gate;
+    var max = Math.ceil(Math.max(gate.candidate_trend_mae_ha, gate.persistence_mae_ha) / 1000) * 1000;
+    var width = 840, height = 500, left = 278, right = 104, top = 130, barH = 46;
+    function w(value) { return Number(value) / max * (width - left - right); }
+    svg.textContent = "";
+    svg.setAttribute("viewBox", "0 0 840 500");
+    svg.setAttribute("aria-label", "Aggregate trend challenger and persistence MAE comparison; lower is better and the spatial allocation is withheld");
+    alphaChartTitle(svg, "The aggregate challenger did not beat persistence", "MAE in hectares · lower is better · this does not validate spatial allocation");
+    [
+      { label: "Candidate trend", value: gate.candidate_trend_mae_ha, color: "#a74747" },
+      { label: "Persistence", value: gate.persistence_mae_ha, color: "#2f755b" }
+    ].forEach(function (row, i) {
+      var y = top + i * 80;
+      alphaChartText(svg, row.label, { "class": "story-chart-label", x: 42, y: y + 28 });
+      svg.appendChild(svgEl("rect", {
+        "class": "alphaearth-chart__bar", x: left, y: y, width: w(row.value), height: barH, rx: 4, fill: row.color
+      }));
+      alphaChartText(svg, formatNumber(row.value, 0) + " ha", {
+        "class": "alphaearth-chart__value", x: left + w(row.value) + 12, y: y + 29
+      });
+    });
+    svg.appendChild(svgEl("rect", { "class": "alphaearth-chart__gate-box", x: 42, y: 326, width: 756, height: 112, rx: 6 }));
+    alphaChartText(svg, "Spatial allocation withheld", { "class": "alphaearth-chart__gate-title", x: 68, y: 366 });
+    alphaChartText(svg, "No independent multi-year change labels were available for valid pixel, kecamatan, or hotspot allocation.", {
+      "class": "alphaearth-chart__gate-copy", x: 68, y: 397
+    });
+  }
+
+  function renderAlphaPilotDesign(svg, data) {
+    if (!svg || !data || !data.pilot) return;
+    var pilot = data.pilot;
+    svg.textContent = "";
+    svg.setAttribute("viewBox", "0 0 840 500");
+    svg.setAttribute("aria-label", "Indramayu 2024 pilot design: 600 candidate labels, 104 spatial blocks, five folds, four AlphaEarth tiles, and 82 Sentinel-1 scenes");
+    alphaChartTitle(svg, "Indramayu pilot design", "Candidate-frame separability in 2024; not independent ground truth");
+    [
+      { value: pilot.sample_count, label: "candidate labels" },
+      { value: pilot.spatial_blocks, label: "spatial blocks" },
+      { value: pilot.folds, label: "spatial folds" },
+      { value: pilot.alphaearth_tiles + " + " + pilot.sentinel1_scenes, label: "AE tiles + S1 scenes" }
+    ].forEach(function (row, i) {
+      var x = 50 + (i % 2) * 390;
+      var y = 124 + Math.floor(i / 2) * 148;
+      svg.appendChild(svgEl("rect", { "class": "alphaearth-chart__pilot-card", x: x, y: y, width: 340, height: 104, rx: 6 }));
+      alphaChartText(svg, String(row.value), { "class": "alphaearth-chart__pilot-value", x: x + 22, y: y + 49 });
+      alphaChartText(svg, row.label, { "class": "alphaearth-chart__pilot-label", x: x + 22, y: y + 77 });
+    });
+    alphaChartText(svg, "Target: cross-sectional separability of a user-processed candidate frame.", {
+      "class": "alphaearth-chart__annotation", x: 50, y: 448
+    });
+  }
+
+  function renderAlphaPilotMetric(svg, data, metric) {
+    if (!svg || !data || !data.pilot) return;
+    var title = metric === "roc_auc" ? "Mean ROC-AUC by pilot model" : "Balanced accuracy and F1 by pilot model";
+    var subtitle = metric === "roc_auc" ? "Indramayu candidate frame · five spatial folds" : "The same candidate-frame pilot; not province-wide accuracy";
+    if (metric === "roc_auc") {
+      renderCompactBars(svg, data.pilot.models.map(function (row) {
+        return { label: row.label, value: row.roc_auc, color: row.id === "sentinel1_only" ? "#8a8177" : "var(--accent)" };
+      }), { title: title, subtitle: subtitle, digits: 3 });
+      svg.setAttribute("aria-label", "Mean ROC-AUC comparison across pilot models");
+      return;
+    }
+    var rows = [];
+    data.pilot.models.forEach(function (row) {
+      rows.push({ label: row.label + " · bal.", value: row.balanced_accuracy, color: row.id === "sentinel1_only" ? "#8a8177" : "var(--accent)" });
+      rows.push({ label: row.label + " · F1", value: row.f1, color: row.id === "sentinel1_only" ? "#b4ada2" : "#4e7581" });
+    });
+    renderCompactBars(svg, rows, { title: title, subtitle: subtitle, digits: 3 });
+    svg.setAttribute("aria-label", "Balanced accuracy and F1 comparison across pilot models");
+  }
+
+  function renderAlphaEarthChart(root, data, chart) {
+    var svg = $("[data-alphaearth-chart]", root);
+    if (!svg || !data) return;
+    if (chart === "scenario-area") renderAlphaScenarioArea(svg, data);
+    else if (chart === "scenario-uncertainty") renderAlphaScenarioUncertainty(svg, data);
+    else if (chart === "scenario-gate") renderAlphaScenarioGate(svg, data);
+    else if (chart === "pilot-design") renderAlphaPilotDesign(svg, data);
+    else if (chart === "pilot-roc") renderAlphaPilotMetric(svg, data, "roc_auc");
+    else if (chart === "pilot-balanced") renderAlphaPilotMetric(svg, data, "balanced");
+    else renderAlphaScenarioContext(svg);
+    startAlphaChartMotion(svg);
+  }
+
+  var alphaEarthStoryData = null;
+  var alphaEarthStoryPromise = null;
+
+  function loadAlphaEarthStoryData() {
+    if (alphaEarthStoryData) return Promise.resolve(alphaEarthStoryData);
+    if (!alphaEarthStoryPromise) {
+      alphaEarthStoryPromise = fetchJson("assets/data/alphaearth/story.json").then(function (data) {
+        alphaEarthStoryData = data;
+        return data;
+      });
+    }
+    return alphaEarthStoryPromise;
+  }
+
+  function initAlphaEarthChart(root) {
+    var storyData = null;
+    var story = bindStory(root, function (step) {
+      setText(root, "[data-story-kpi]", step.getAttribute("data-kpi"));
+      setText(root, "[data-story-label]", step.getAttribute("data-label"));
+      setText(root, "[data-story-note]", step.getAttribute("data-note"));
+      if (storyData) renderAlphaEarthChart(root, storyData, step.getAttribute("data-alpha-chart"));
+    });
+
+    function load() {
+      loadAlphaEarthStoryData().then(function (data) {
+        storyData = data;
+        root.classList.add("is-loaded");
+        var active = story.getActiveStep();
+        if (active) renderAlphaEarthChart(root, storyData, active.getAttribute("data-alpha-chart"));
+      }).catch(function (err) {
+        var status = $("[data-story-status]", root);
+        if (status) status.textContent = "The interactive scenario data could not load. The accessible tables below remain available.";
+        console.error(err);
+      });
+    }
+
+    if ("IntersectionObserver" in window) {
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            observer.disconnect();
+            load();
+          }
+        });
+      }, { rootMargin: "600px 0px" });
+      observer.observe(root);
+    } else {
+      load();
+    }
+  }
+
+  function initAlphaEarthBoundaries(root) {
+    var index = $("[data-boundary-index]", root);
+    var title = $("[data-boundary-title]", root);
+    var copy = $("[data-boundary-copy]", root);
+    var items = $$("[data-boundary-key]", root);
+    bindStory(root, function (step, activeIndex) {
+      var key = step.getAttribute("data-boundary");
+      if (index) index.textContent = String(activeIndex + 1).padStart(2, "0") + " / 05";
+      if (title) title.textContent = step.getAttribute("data-boundary-title") || "";
+      if (copy) copy.textContent = step.getAttribute("data-boundary-copy") || "";
+      items.forEach(function (item) {
+        var on = item.getAttribute("data-boundary-key") === key;
+        item.classList.toggle("is-active", on);
+        if (on) item.setAttribute("aria-current", "step");
+        else item.removeAttribute("aria-current");
+      });
+    });
     root.classList.add("is-loaded");
   }
 
@@ -843,6 +1260,8 @@
     $$("[data-pangan-scrolly]").forEach(initPangan);
     $$("[data-mbr-scrolly]").forEach(initMbr);
     $$("[data-image-scrolly]").forEach(initImageStory);
+    $$("[data-alphaearth-chart-story]").forEach(initAlphaEarthChart);
+    $$("[data-alphaearth-boundary-story]").forEach(initAlphaEarthBoundaries);
     $$("[data-cbd-scrolly]").forEach(initCbd);
   });
 })();

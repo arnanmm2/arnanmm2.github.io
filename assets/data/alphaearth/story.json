@@ -1,0 +1,64 @@
+{
+  "status": "Provisional scientific scenario — not an official government estimate.",
+  "scenario": {
+    "analysis_unit": "Aggregate of Indramayu, Karawang, and Subang only; no within-district, kecamatan, or pixel allocation.",
+    "area_series": [
+      {
+        "id": "S0_no_additional_conversion",
+        "label": "S0 · no additional conversion",
+        "color": "#2f755b",
+        "values": [{"year":2025,"area_ha":323049.86},{"year":2026,"area_ha":323049.86},{"year":2027,"area_ha":323049.86},{"year":2028,"area_ha":323049.86},{"year":2029,"area_ha":323049.86},{"year":2030,"area_ha":323049.86},{"year":2031,"area_ha":323049.86},{"year":2032,"area_ha":323049.86},{"year":2033,"area_ha":323049.86},{"year":2034,"area_ha":323049.86}]
+      },
+      {
+        "id": "S1_business_as_usual",
+        "label": "S1 · business as usual",
+        "color": "#b26b31",
+        "values": [{"year":2025,"area_ha":302190.06},{"year":2026,"area_ha":282791.66},{"year":2027,"area_ha":264745.31},{"year":2028,"area_ha":247950.24},{"year":2029,"area_ha":232313.62},{"year":2030,"area_ha":217749.83},{"year":2031,"area_ha":204179.95},{"year":2032,"area_ha":191531.17},{"year":2033,"area_ha":179736.31},{"year":2034,"area_ha":168733.4}]
+      },
+      {
+        "id": "S2_strong_protection",
+        "label": "S2 · strong protection",
+        "color": "#317d8a",
+        "values": [{"year":2025,"area_ha":314705.94},{"year":2026,"area_ha":306595.84},{"year":2027,"area_ha":298712.57},{"year":2028,"area_ha":291049.35},{"year":2029,"area_ha":283599.61},{"year":2030,"area_ha":276356.99},{"year":2031,"area_ha":269315.33},{"year":2032,"area_ha":262468.66},{"year":2033,"area_ha":255811.21},{"year":2034,"area_ha":249337.37}]
+      },
+      {
+        "id": "S3_high_development_pressure",
+        "label": "S3 · high development pressure",
+        "color": "#a74747",
+        "values": [{"year":2025,"area_ha":286545.21},{"year":2026,"area_ha":254516.1},{"year":2027,"area_ha":226376.45},{"year":2028,"area_ha":201620.86},{"year":2029,"area_ha":179813.07},{"year":2030,"area_ha":160576.14},{"year":2031,"area_ha":143584.06},{"year":2032,"area_ha":128554.59},{"year":2033,"area_ha":115243.13},{"year":2034,"area_ha":103437.45}]
+      },
+      {
+        "id": "S4_production_intensification",
+        "label": "S4 · production intensification",
+        "color": "#75679a",
+        "values": [{"year":2025,"area_ha":302190.06},{"year":2026,"area_ha":282791.66},{"year":2027,"area_ha":264745.31},{"year":2028,"area_ha":247950.24},{"year":2029,"area_ha":232313.62},{"year":2030,"area_ha":217749.83},{"year":2031,"area_ha":204179.95},{"year":2032,"area_ha":191531.17},{"year":2033,"area_ha":179736.31},{"year":2034,"area_ha":168733.4}]
+      }
+    ],
+    "uncertainty_2034": [
+      {"id":"S0_no_additional_conversion","label":"S0 · no additional conversion","color":"#2f755b","p05_ha":216198.02,"p50_ha":322755.78,"p95_ha":429777.64},
+      {"id":"S1_business_as_usual","label":"S1 · business as usual","color":"#b26b31","p05_ha":102707.02,"p50_ha":278376.51,"p95_ha":410577.79},
+      {"id":"S2_strong_protection","label":"S2 · strong protection","color":"#317d8a","p05_ha":175643.9,"p50_ha":292803.06,"p95_ha":415202.68},
+      {"id":"S3_high_development_pressure","label":"S3 · high development pressure","color":"#a74747","p05_ha":53142.36,"p50_ha":269569.99,"p95_ha":408942.51},
+      {"id":"S4_production_intensification","label":"S4 · production intensification","color":"#75679a","p05_ha":101983.28,"p50_ha":278718.91,"p95_ha":410713.46}
+    ]
+  },
+  "pilot": {
+    "area": "Indramayu, 2024",
+    "sample_count": 600,
+    "spatial_blocks": 104,
+    "folds": 5,
+    "alphaearth_tiles": 4,
+    "sentinel1_scenes": 82,
+    "models": [
+      {"id":"sentinel1_only","label":"Sentinel-1","roc_auc":0.761,"balanced_accuracy":0.69,"f1":0.677},
+      {"id":"alphaearth_only","label":"AlphaEarth","roc_auc":0.966,"balanced_accuracy":0.921,"f1":0.916},
+      {"id":"alphaearth_plus_sentinel1","label":"AlphaEarth + S1","roc_auc":0.97,"balanced_accuracy":0.925,"f1":0.922},
+      {"id":"alphaearth_plus_sentinel1_plus_kp2b_soft","label":"AlphaEarth + S1 + KP2B","roc_auc":0.973,"balanced_accuracy":0.926,"f1":0.923}
+    ]
+  },
+  "quality_gate": {
+    "candidate_trend_mae_ha": 12967.28,
+    "persistence_mae_ha": 9259.35,
+    "spatial_allocation": "withheld"
+  }
+}
