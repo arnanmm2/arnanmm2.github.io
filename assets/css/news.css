@@ -134,13 +134,19 @@ body[data-project="news"] .foot a{ color:var(--n-ink-soft); }
 
 /* ============ STORY SCROLLY (sticky photo stage + numbered steps) ============ */
 .n-scrolly{max-width:1180px;margin:30px auto 0;padding:0 20px;display:grid;grid-template-columns:1.1fr 1fr;gap:0;}
-@media(max-width:820px){.n-scrolly{grid-template-columns:1fr;gap:14px;}}
+/* Mobile: single column, but .n-visual and .n-steps share ONE grid area
+   instead of auto-placing into two separate rows. Two separate rows would
+   give the sticky panel a containing block no taller than itself — zero
+   "slack" to actually stick within, which reads as stuck/broken mid-scroll.
+   Stacking them into the same area makes the row as tall as .n-steps (the
+   long one), giving sticky the same scroll range it has on desktop. */
+@media(max-width:820px){
+  .n-scrolly{grid-template-columns:1fr;grid-template-areas:"stack";gap:0;}
+  .n-steps{grid-area:stack;margin-top:290px;}
+}
 
 .n-visual{position:sticky;top:80px;align-self:start;height:calc(100vh - 130px);max-height:540px;z-index:2;isolation:isolate;}
-/* position:sticky inside a CSS grid is unreliable on iOS Safari (panel can
-   get stuck mid-scroll instead of releasing) — narrow viewports drop sticky
-   entirely and just show the panel once, updating in place as steps pass. */
-@media(max-width:820px){.n-visual{position:relative;top:0;height:280px;z-index:2;margin-bottom:6px;}}
+@media(max-width:820px){.n-visual{grid-area:stack;top:10px;height:270px;}}
 
 .n-stage{
   position:relative;height:100%;overflow:hidden;background:#000;
