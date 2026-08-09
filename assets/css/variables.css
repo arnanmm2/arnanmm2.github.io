@@ -46,6 +46,11 @@
   --color-alphaearth-soft: #edf2d9;
   --color-alphaearth-on: #142000;
   --color-alphaearth-rgb: 124 145 68;
+  --color-news: #445266;
+  --color-news-ink: #2c3644;
+  --color-news-soft: #e3e7ee;
+  --color-news-on: #ffffff;
+  --color-news-rgb: 68 82 102;
   --viz-surplus: #5f8d38;
   --viz-sentra: #2e8965;
   --viz-route: #2d77a4;
@@ -149,6 +154,11 @@
   --color-alphaearth-soft: #33421a;
   --color-alphaearth-on: #172400;
   --color-alphaearth-rgb: 184 211 109;
+  --color-news: #9fb0c9;
+  --color-news-ink: #c3d0e3;
+  --color-news-soft: #262f3d;
+  --color-news-on: #10151d;
+  --color-news-rgb: 159 176 201;
   --viz-surplus: #93c85f;
   --viz-sentra: #74cfa6;
   --viz-route: #84c9f2;
@@ -240,4 +250,13 @@ body[data-project="cbd"],
   --accent-soft: var(--color-quaternary-soft);
   --on-accent: var(--color-quaternary-on);
   --accent-rgb: var(--color-quaternary-rgb);
+}
+
+body[data-project="news"],
+.card[data-project="news"] {
+  --accent: var(--color-news);
+  --accent-ink: var(--color-news-ink);
+  --accent-soft: var(--color-news-soft);
+  --on-accent: var(--color-news-on);
+  --accent-rgb: var(--color-news-rgb);
 }
