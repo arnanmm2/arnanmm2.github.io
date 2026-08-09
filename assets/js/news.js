@@ -9,21 +9,64 @@
   function $$(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
   function cssVar(name) { return getComputedStyle(document.body).getPropertyValue(name).trim(); }
 
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- Lenis inertial smooth scroll (MIT, optional) ----------
+     This is what gives the page its weighted, eased scroll feel rather
+     than the OS's abrupt native scroll. If the CDN script is unavailable
+     — or the visitor prefers reduced motion — everything below still
+     works on plain native scrolling. */
+  var lenis = null;
+  if (typeof window.Lenis === "function" && !reduceMotion) {
+    try {
+      lenis = new window.Lenis({
+        duration: 1.05,
+        easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
+        smoothWheel: true,
+        touchMultiplier: 1.6
+      });
+      var rafLoop = function (time) { lenis.raf(time); requestAnimationFrame(rafLoop); };
+      requestAnimationFrame(rafLoop);
+      // Keep scroll-driven work on Lenis' own tick so it stays in sync.
+      lenis.on("scroll", function () { onScrollTick(); });
+      // Chapter-index links must route through Lenis, not native anchor jumps.
+      $$('a[href^="#"]').forEach(function (a) {
+        a.addEventListener("click", function (e) {
+          var target = document.querySelector(a.getAttribute("href"));
+          if (!target) return;
+          e.preventDefault();
+          lenis.scrollTo(target, { offset: -70 });
+        });
+      });
+    } catch (err) { lenis = null; }
+  }
+
+  /* Scroll-driven subscribers: each gets called on every scroll frame.
+     Registered by the scrub/parallax code further down. */
+  var scrollSubscribers = [];
+  var scrollFrame = 0;
+  function onScrollTick() {
+    if (scrollFrame) return;
+    scrollFrame = requestAnimationFrame(function () {
+      scrollFrame = 0;
+      for (var i = 0; i < scrollSubscribers.length; i++) scrollSubscribers[i]();
+    });
+  }
+  if (!lenis) {
+    window.addEventListener("scroll", onScrollTick, { passive: true });
+  }
+  window.addEventListener("resize", onScrollTick);
+
   /* ---------- Reading progress ---------- */
   (function () {
     var bar = $("[data-read-progress] span");
     if (!bar) return;
-    var frame = 0;
     function update() {
-      frame = 0;
       var h = document.documentElement;
-      var scrolled = h.scrollTop;
       var max = h.scrollHeight - h.clientHeight;
-      bar.style.transform = "scaleX(" + (max > 0 ? Math.min(1, scrolled / max) : 0).toFixed(4) + ")";
+      bar.style.transform = "scaleX(" + (max > 0 ? Math.min(1, h.scrollTop / max) : 0).toFixed(4) + ")";
     }
-    function request() { if (!frame) frame = requestAnimationFrame(update); }
-    window.addEventListener("scroll", request, { passive: true });
-    window.addEventListener("resize", request);
+    scrollSubscribers.push(update);
     update();
   })();
 
@@ -54,7 +97,10 @@
         dot.appendChild(fill);
         dot.addEventListener("click", function () {
           manualUntil = Date.now() + 700;
-          step.scrollIntoView({ behavior: "smooth", block: "center" });
+          // Lenis owns the scroll position while active — a native
+          // scrollIntoView would be immediately undone by its RAF loop.
+          if (lenis) lenis.scrollTo(step, { offset: -(window.innerHeight / 2) + (step.offsetHeight / 2) });
+          else step.scrollIntoView({ behavior: "smooth", block: "center" });
           activate(i);
         });
         progress.appendChild(dot);
@@ -84,6 +130,36 @@
       }, { threshold: 0, rootMargin: "-40% 0px -40% 0px" });
       steps.forEach(function (step) { io.observe(step); });
     }
+
+    /* ---- Continuous scrub ----
+       Discrete step activation (above) swaps the content; this adds the
+       motion *between* steps that makes the panel feel attached to the
+       scroll rather than snapping. Two channels:
+         --scrub  0..1 progress through the whole story  (slow photo drift)
+         --local  0..1 progress within the current step  (fill, micro-shift)
+       Both are plain CSS custom properties, so the styling stays in CSS. */
+    var stage = $(".n-stage", root);
+    var progressFill = $("[data-scrub-fill]", root);
+    if (stage && !reduceMotion) {
+      var scrub = function () {
+        var rect = root.getBoundingClientRect();
+        var vh = window.innerHeight || 1;
+        var span = rect.height - vh;
+        var p = span > 0 ? (-rect.top) / span : 0;
+        p = Math.max(0, Math.min(1, p));
+        stage.style.setProperty("--scrub", p.toFixed(4));
+
+        if (steps.length) {
+          var stepsSpan = 1 / steps.length;
+          var within = (p % stepsSpan) / stepsSpan;
+          stage.style.setProperty("--local", (isFinite(within) ? within : 0).toFixed(4));
+          if (progressFill) progressFill.style.transform = "scaleX(" + p.toFixed(4) + ")";
+        }
+      };
+      scrollSubscribers.push(scrub);
+      scrub();
+    }
+
     root.classList.add("is-loaded");
   }
 
