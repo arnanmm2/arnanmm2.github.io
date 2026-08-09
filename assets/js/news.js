@@ -1,5 +1,5 @@
 /* ============================================================
-   News page — scrollytelling interactions
+   News page — Inversa-inspired scrollytelling interactions
    GitHub Pages-safe vanilla JS, no build step. Loaded after main.js.
    ============================================================ */
 (function () {
@@ -34,14 +34,14 @@
     var now = new Date();
     var d = now.toLocaleDateString("en-GB", { timeZone: "Asia/Jakarta", weekday: "short", day: "numeric", month: "short", year: "numeric" });
     var t = now.toLocaleTimeString("en-GB", { timeZone: "Asia/Jakarta", hour: "2-digit", minute: "2-digit" });
-    el.textContent = d + " · " + t;
+    el.textContent = d + " · " + t + " WIB";
   }
   tickClock();
   setInterval(tickClock, 30000);
 
   /* ---------- Generic story-step scrollytelling binder ---------- */
   function bindNewsStory(root, onActive) {
-    var steps = $$(".story-step", root);
+    var steps = $$(".n-step", root);
     var progress = $("[data-story-progress]", root);
     var dots = [];
     var active = -1;
@@ -49,10 +49,9 @@
 
     if (progress && steps.length) {
       steps.forEach(function (step, i) {
-        var heading = step.querySelector("h4");
-        var dot = document.createElement("button");
-        dot.type = "button";
-        dot.setAttribute("aria-label", "Jump to step " + (i + 1) + (heading ? ": " + heading.textContent : ""));
+        var dot = document.createElement("i");
+        var fill = document.createElement("b");
+        dot.appendChild(fill);
         dot.addEventListener("click", function () {
           manualUntil = Date.now() + 700;
           step.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -68,8 +67,8 @@
       active = index;
       steps.forEach(function (step, i) { step.classList.toggle("is-active", i === index); });
       dots.forEach(function (dot, i) {
-        dot.classList.toggle("is-active", i === index);
-        dot.classList.toggle("is-done", i < index);
+        dot.classList.toggle("active", i === index);
+        dot.classList.toggle("done", i < index);
       });
       onActive(steps[index], index);
     }
@@ -82,22 +81,42 @@
         entries.forEach(function (entry) {
           if (entry.isIntersecting) activate(steps.indexOf(entry.target));
         });
-      }, { threshold: 0, rootMargin: "-38% 0px -38% 0px" });
+      }, { threshold: 0, rootMargin: "-40% 0px -40% 0px" });
       steps.forEach(function (step) { io.observe(step); });
     }
     root.classList.add("is-loaded");
   }
 
+  function tweenText(el, newVal) {
+    if (!el) return;
+    el.style.transition = "opacity .15s";
+    el.style.opacity = 0;
+    setTimeout(function () {
+      el.textContent = newVal || "";
+      el.style.opacity = 1;
+    }, 150);
+  }
+
   function wireKpiStory(rootSelector) {
     var root = $(rootSelector);
     if (!root) return;
-    bindNewsStory(root, function (step) {
+    var counter = $("[data-w-counter]", root);
+    var badge = $("[data-w-badge]", root);
+    var photos = $$(".n-stage-photo img", root);
+    var credit = $("[data-w-credit]", root);
+    var total = $$(".n-step", root).length;
+    bindNewsStory(root, function (step, index) {
       var kpi = $("[data-w-kpi]", root);
       var label = $("[data-w-label]", root);
       var note = $("[data-w-note]", root);
-      if (kpi) kpi.textContent = step.getAttribute("data-kpi") || "";
-      if (label) label.textContent = step.getAttribute("data-label") || "";
-      if (note) note.textContent = step.getAttribute("data-note") || "";
+      tweenText(kpi, step.getAttribute("data-kpi"));
+      tweenText(label, step.getAttribute("data-label"));
+      tweenText(note, step.getAttribute("data-note"));
+      tweenText(credit, step.getAttribute("data-credit"));
+      if (counter) counter.textContent = String(index + 1).padStart(2, "0");
+      if (photos.length) {
+        photos.forEach(function (p) { p.classList.toggle("on", +p.getAttribute("data-step") === index); });
+      }
     });
   }
   wireKpiStory("[data-mbg-story]");
@@ -155,7 +174,7 @@
     var chgEl = $("#btcChg");
     if (chgEl) {
       chgEl.textContent = (up ? "▲ +" : "▼ ") + btc.chg.toFixed(2) + "% (24h)";
-      chgEl.style.color = up ? "var(--color-secondary)" : "var(--color-highlight)";
+      chgEl.style.color = up ? "var(--n-accent-ink)" : "var(--n-warn)";
     }
     var idrEl = $("#btcIdr");
     if (idrEl) idrEl.textContent = "≈ Rp " + Math.round(btc.price * RATES.USD).toLocaleString("id-ID");
@@ -165,8 +184,8 @@
     if (volEl) volEl.textContent = "$" + (btc.vol / 1e9).toFixed(1) + "B";
     var badge = $("#btcBadge");
     if (badge) {
-      badge.className = "news-live-badge" + (btc.live ? " on" : "");
-      badge.innerHTML = '<span class="live-dot"></span>' + (btc.live ? "Live · Binance" : "Offline snapshot");
+      badge.className = "n-stage-badge" + (btc.live ? " on" : "");
+      badge.innerHTML = "<i></i>" + (btc.live ? "Live · Binance" : "Offline snapshot");
     }
   }
 
@@ -188,14 +207,14 @@
     })(0);
   }
 
-  /* ---------- Theme-aware Chart.js charts ---------- */
+  /* ---------- Theme-aware (dark-only) Chart.js charts ---------- */
   var chart1 = null, chart2 = null, chart3 = null;
   function buildCharts() {
     if (typeof Chart === "undefined") return;
-    var ink = cssVar("--ink"), sub = cssVar("--muted"), line = cssVar("--line-soft");
-    var acc = cssVar("--accent"), acc2 = cssVar("--color-secondary");
+    var ink = "#f0eee7", sub = "#a9a59b", line = "rgba(240,238,231,.10)";
+    var acc = "#8fe0c4", acc2 = "#e0a06a";
     Chart.defaults.color = sub;
-    Chart.defaults.font.family = "'Roboto Flex', system-ui, sans-serif";
+    Chart.defaults.font.family = "-apple-system, 'Helvetica Neue', sans-serif";
 
     var labels = ["24 Jul", "27 Jul", "28 Jul", "29 Jul", "30 Jul", "31 Jul", "3 Aug", "4 Aug", "5 Aug", "6 Aug"];
     var usd = [17845, 17862, 17870, 17858, 17875, 17890, 17902, 17908, 17915, 17919];
@@ -221,7 +240,7 @@
         data: { labels: labels, datasets: [
           { label: "vs USD", data: idx(usd), borderColor: acc, backgroundColor: "transparent", tension: .34, pointRadius: 3, borderWidth: 2.5 },
           { label: "vs EUR", data: idx(eur), borderColor: acc2, backgroundColor: "transparent", tension: .34, pointRadius: 3, borderWidth: 2.5 },
-          { label: "vs SGD", data: idx(sgd), borderColor: cssVar("--color-quaternary"), backgroundColor: "transparent", tension: .34, pointRadius: 3, borderWidth: 2.5 }
+          { label: "vs SGD", data: idx(sgd), borderColor: "#8fb9c9", backgroundColor: "transparent", tension: .34, pointRadius: 3, borderWidth: 2.5 }
         ] },
         options: { responsive: true, plugins: { legend: { labels: { color: ink } }, title: { display: true, text: "Rupiah vs major currencies — indexed to 24 Jul = 100", color: ink, font: { size: 13, weight: "600" } } }, scales: { x: { grid: { color: line }, ticks: { color: sub } }, y: { grid: { color: line }, ticks: { color: sub } } } }
       });
@@ -233,16 +252,11 @@
       if (chart3) chart3.destroy();
       chart3 = new Chart(btcCanvas, {
         type: "line",
-        data: { labels: btc.labels, datasets: [{ label: "BTC / USD daily close", data: btc.closes, borderColor: btcUp ? acc2 : cssVar("--color-highlight"), backgroundColor: "transparent", tension: .3, pointRadius: 0, borderWidth: 2.5 }] },
+        data: { labels: btc.labels, datasets: [{ label: "BTC / USD daily close", data: btc.closes, borderColor: btcUp ? acc : acc2, backgroundColor: "transparent", tension: .3, pointRadius: 0, borderWidth: 2.5 }] },
         options: { responsive: true, plugins: { legend: { labels: { color: ink } }, title: { display: true, text: "Bitcoin (BTCUSDT) — last " + btc.closes.length + " daily closes" + (btc.live ? " · live via Binance" : " · offline snapshot"), color: ink, font: { size: 13, weight: "600" } } }, scales: { x: { grid: { color: line }, ticks: { color: sub, maxTicksLimit: 8 } }, y: { grid: { color: line }, ticks: { color: sub, callback: function (v) { return "$" + (v / 1000).toFixed(0) + "k"; } } } } }
       });
     }
   }
-
-  // Rebuild charts on theme toggle (main.js handles the actual toggle + persistence)
-  $$("[data-theme-toggle]").forEach(function (btn) {
-    btn.addEventListener("click", function () { setTimeout(buildCharts, 60); });
-  });
 
   /* ---------- Fact-check helper ---------- */
   window.runNewsFactCheck = function () {
@@ -269,12 +283,13 @@
   /* ---------- Bookmarks (lightweight, per-card) ---------- */
   var saved = new Set(JSON.parse(localStorage.getItem("savedNews") || "[]"));
   function slug(s) { return (s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60); }
-  $$(".news-card").forEach(function (card) {
+  $$(".n-card").forEach(function (card) {
     var h = card.querySelector("h3");
-    var id = slug(h ? h.textContent : "");
+    if (!h) return;
+    var id = slug(h.textContent);
     card.dataset.nid = id;
     var bk = document.createElement("button");
-    bk.className = "news-bk" + (saved.has(id) ? " saved" : "");
+    bk.className = "n-bk" + (saved.has(id) ? " saved" : "");
     bk.type = "button";
     bk.innerHTML = saved.has(id) ? "★" : "☆";
     bk.setAttribute("aria-label", "Save this story");
@@ -284,7 +299,7 @@
       else { saved.add(id); bk.classList.add("saved"); bk.innerHTML = "★"; }
       localStorage.setItem("savedNews", JSON.stringify(Array.from(saved)));
     });
-    var media = card.querySelector(".news-card__media") || card;
+    var media = card.querySelector(".n-card-media") || card;
     media.appendChild(bk);
   });
 
@@ -293,7 +308,7 @@
   if (searchInput) {
     searchInput.addEventListener("input", function () {
       var q = searchInput.value.toLowerCase().trim();
-      $$(".news-card").forEach(function (card) {
+      $$(".n-card").forEach(function (card) {
         var match = !q || card.textContent.toLowerCase().indexOf(q) !== -1;
         card.style.display = match ? "" : "none";
       });
