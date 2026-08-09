@@ -7,17 +7,28 @@
    ============================================================ */
 
 :root{
-  --n-bg:#0b0c0e; --n-surface:#111316; --n-surface-2:#171a1e;
-  --n-ink:#f0eee7; --n-ink-soft:#a9a59b; --n-muted:#6b6862;
-  --n-line:rgba(240,238,231,.10); --n-line-strong:rgba(240,238,231,.20);
-  --n-accent:#8fe0c4; --n-accent-ink:#b6f0da; --n-accent-soft:#132623;
-  --n-warn:#e0a06a;
-  --n-mono:ui-monospace,'SF Mono',Menlo,'Courier New',monospace;
+  /* Grounds are olive-tinted rather than neutral — a warm-black family
+     reads as chosen, where a blue-grey black reads as default. */
+  --n-bg:#13140e; --n-surface:#181815; --n-surface-2:#20211b;
+  --n-ink:#f4f3e8; --n-ink-soft:#a8a89b; --n-muted:#6f7065;
+  --n-line:rgba(244,243,232,.11); --n-line-strong:rgba(244,243,232,.22);
+  /* Mint carries the signal; acid-lime is the second voice, reserved for
+     genuinely live/alert states so it stays loud. */
+  --n-accent:#00d399; --n-accent-ink:#4fe3b6; --n-accent-soft:#0d2a22;
+  --n-live:#ebfc72;
+  --n-warn:#f1664d;
+  --n-mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace;
   --n-ease:cubic-bezier(.22,1,.36,1);
+  /* Cut-corner geometry used on panels and the hero index. */
+  --n-cut:14px;
 }
 
 body[data-project="news"]{
   background:var(--n-bg); color:var(--n-ink);
+  /* Shared components on this page (dflow, .foot, .ms) read --font-mono
+     from variables.css; repoint it so they inherit JetBrains Mono too
+     instead of falling back to a system face. */
+  --font-mono:var(--n-mono);
 }
 body[data-project="news"] .theme-toggle{ display:none; }
 body[data-project="news"] .nav__links{
@@ -43,17 +54,24 @@ body[data-project="news"] .foot a{ color:var(--n-ink-soft); }
 .n-hero-hud .item .val{font-size:15px;color:var(--n-ink);font-variant-numeric:tabular-nums;}
 .n-hero-hud .item .val.up{color:var(--n-accent-ink);}
 .n-hero-hud .item .val.warn{color:var(--n-warn);}
-.n-hero-hud .live{margin-left:auto;display:flex;align-items:center;gap:7px;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--n-accent-ink);}
-.n-hero-hud .live i{width:6px;height:6px;border-radius:50%;background:var(--n-accent);animation:nPulse 1.4s infinite;}
+/* Acid-lime is held back for genuinely live readouts, so it stays loud. */
+.n-hero-hud .live{margin-left:auto;display:flex;align-items:center;gap:7px;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--n-live);}
+.n-hero-hud .live i{width:6px;height:6px;border-radius:50%;background:var(--n-live);animation:nPulse 1.4s infinite;}
 
 .n-hero h1{
-  font-family:-apple-system,'Helvetica Neue',sans-serif;font-size:clamp(38px,7vw,80px);font-weight:800;
-  letter-spacing:-.035em;line-height:.98;margin:0 0 22px;max-width:15ch;color:var(--n-ink);
+  font-family:'Roboto Flex',-apple-system,'Helvetica Neue',sans-serif;
+  font-size:clamp(44px,8.5vw,104px);font-weight:700;
+  /* Tight tracking + sub-1 leading is the reference's display signature. */
+  letter-spacing:-.04em;line-height:.9;margin:0 0 24px;max-width:13ch;color:var(--n-ink);
+  text-transform:uppercase;text-wrap:balance;
 }
-.n-hero h1 span{color:var(--n-accent-ink);}
-.n-hero .lede{font-size:15.5px;color:var(--n-ink-soft);max-width:56ch;line-height:1.65;margin:0 0 30px;}
+.n-hero h1 span{color:var(--n-accent);}
+.n-hero .lede{font-size:15.5px;color:var(--n-ink-soft);max-width:56ch;line-height:1.62;margin:0 0 30px;}
 
-.n-hero-index{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--n-line);border-radius:2px;overflow:hidden;margin-bottom:26px;}
+.n-hero-index{
+  display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--n-line);margin-bottom:26px;
+  clip-path:polygon(0 0, 100% 0, 100% calc(100% - var(--n-cut)), calc(100% - var(--n-cut)) 100%, 0 100%);
+}
 .n-hero-index a{
   font-family:var(--n-mono);font-size:11.5px;letter-spacing:.03em;color:var(--n-ink-soft);
   padding:12px 17px;border-right:1px solid var(--n-line);border-bottom:1px solid var(--n-line);text-decoration:none;
@@ -150,8 +168,13 @@ body[data-project="news"] .foot a{ color:var(--n-ink-soft); }
 
 .n-stage{
   position:relative;height:100%;overflow:hidden;background:#000;
-  border:1px solid var(--n-line);border-radius:2px;display:flex;flex-direction:column;
+  border:1px solid var(--n-line);display:flex;flex-direction:column;
   box-shadow:0 20px 50px -22px rgba(0,0,0,.6);
+  /* Bevelled bottom-right corner — a machined/instrument cue rather than
+     a rounded card. Border-radius is dropped since clip-path governs the
+     silhouette. */
+  border-radius:0;
+  clip-path:polygon(0 0, 100% 0, 100% calc(100% - var(--n-cut)), calc(100% - var(--n-cut)) 100%, 0 100%);
   /* Set continuously by news.js as you scroll (0..1). Defaults keep the
      panel correct if JS never runs. */
   --scrub:0; --local:0;
