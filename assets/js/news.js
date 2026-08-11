@@ -201,7 +201,7 @@
   wireKpiStory("[data-dots-story]");
 
   /* ---------- Currency converter ---------- */
-  var RATES = { IDR: 1, USD: 17879, EUR: 20668, SGD: 13989, JPY: 113.30, AUD: 12636 };
+  var RATES = { IDR: 1, USD: 17850, EUR: 20623, SGD: 13955, JPY: 112.09, AUD: 12603 };
   var cvAmount = $("#cvAmount"), cvFrom = $("#cvFrom"), cvTo = $("#cvTo"), cvOut = $("#cvOut");
   function fmt(n, cur) {
     var dec = cur === "IDR" ? 0 : 2;
@@ -223,7 +223,7 @@
 
   /* ---------- Rupiah strength gauge ---------- */
   (function () {
-    var ytd = -7.3;
+    var ytd = -7.2;
     var pct = Math.max(2, Math.min(98, (ytd + 15) / 30 * 100));
     var mark = $("#newsGaugeMark");
     if (mark) mark.style.left = pct + "%";
@@ -231,8 +231,8 @@
 
   /* ---------- Bitcoin: live via Binance (offline fallback) ---------- */
   var btc = {
-    price: 65228, chg: 0.79, high: 65286, low: 64723, vol: 30600000000, live: false,
-    closes: [60920, 61780, 62650, 63400, 63980, 64550, 65120, 65480, 65210, 64680, 64210, 64790, 64938, 65074, 65228],
+    price: 65238, chg: 0.34, high: 65510, low: 65080, vol: 28800000000, live: false,
+    closes: [61780, 62650, 63400, 63980, 64550, 65120, 65480, 65210, 64680, 64210, 64790, 64938, 65074, 65228, 65238],
     labels: []
   };
   (function () {
@@ -292,10 +292,10 @@
     Chart.defaults.color = sub;
     Chart.defaults.font.family = "-apple-system, 'Helvetica Neue', sans-serif";
 
-    var labels = ["24 Jul", "27 Jul", "28 Jul", "29 Jul", "30 Jul", "31 Jul", "3 Aug", "4 Aug", "5 Aug", "6 Aug", "7 Aug", "10 Aug"];
-    var usd = [17845, 17862, 17870, 17858, 17875, 17890, 18047, 17960, 17920, 17919, 17795, 17879];
-    var eur = [20629, 20649, 20658, 20644, 20664, 20681, 20862, 20762, 20716, 20714, 20567, 20668];
-    var sgd = [13964, 13977, 13983, 13974, 13987, 13999, 14122, 14054, 14023, 14022, 13925, 13989];
+    var labels = ["27 Jul", "28 Jul", "29 Jul", "30 Jul", "31 Jul", "3 Aug", "4 Aug", "5 Aug", "6 Aug", "7 Aug", "10 Aug", "11 Aug"];
+    var usd = [17862, 17870, 17858, 17875, 17890, 18047, 17960, 17920, 17919, 17795, 17879, 17850];
+    var eur = [20649, 20658, 20644, 20664, 20681, 20862, 20762, 20716, 20714, 20567, 20668, 20623];
+    var sgd = [13977, 13983, 13974, 13987, 13999, 14122, 14054, 14023, 14022, 13925, 13989, 13955];
     function idx(a) { return a.map(function (v) { return +(v / a[0] * 100).toFixed(2); }); }
 
     var usdCanvas = $("#usdIdrChart");
